@@ -96,15 +96,15 @@ func findEbpfMaps() (map[string]int, error) {
 	}
 
 	if m[mSaddrs] == -1 {
-		return m, fmt.Errorf("Failed to find map %s", mSaddrs)
+		return m, fmt.Errorf("failed to find map %s", mSaddrs)
 	}
 
 	if m[mDaddrs] == -1 {
-		return m, fmt.Errorf("Failed to find map %s", mDaddrs)
+		return m, fmt.Errorf("failed to find map %s", mDaddrs)
 	}
 
 	if m[mRules] == -1 {
-		return m, fmt.Errorf("Failed to find map %s", mRules)
+		return m, fmt.Errorf("failed to find map %s", mRules)
 	}
 
 	log.Printf("Found maps: %v\n", m)
@@ -115,7 +115,7 @@ func findEbpfMaps() (map[string]int, error) {
 func updateMap(mid int, ip netip.Addr) error {
 	m, err := ebpf.NewMapFromID(ebpf.MapID(mid))
 	if err != nil {
-		return fmt.Errorf("Failed to open map %d: %v", mid, err)
+		return fmt.Errorf("failed to open map %d: %v", mid, err)
 	}
 
 	key := ruleStruct{key: 1}
