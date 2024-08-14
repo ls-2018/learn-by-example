@@ -19,7 +19,7 @@ import (
 	"github.com/vishvananda/netlink"
 )
 
-//go:generate go run github.com/cilium/ebpf/cmd/bpf2go -no-global-types -cc clang xdpfn ./xdp.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
+//go:generate bpf2go -no-global-types -cc clang xdpfn ./xdp.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
 
 func main() {
 	var dev string
@@ -116,7 +116,7 @@ func main() {
 func delayPackets(xsk *xdp.Socket, descs []xdp.Desc) {
 	for _, desc := range descs {
 		desc := desc
-		latency := readLatency(xsk, desc)
+		latency := readLatency(xsk, desc) // 从 metadata 里读取延时信息
 		log.Printf("Delaying packet by %s", latency)
 		delayPacket(xsk, desc, latency)
 	}

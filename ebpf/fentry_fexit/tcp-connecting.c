@@ -18,8 +18,7 @@ struct {
     __uint(type, BPF_MAP_TYPE_PERF_EVENT_ARRAY);
 } events SEC(".maps");
 
-static __noinline void handle_new_connection(void *ctx, struct sock *sk)
-{
+static __noinline void handle_new_connection(void *ctx, struct sock *sk) {
     event_t ev = {};
 
     ev.saddr = BPF_CORE_READ(sk, __sk_common.skc_rcv_saddr);
@@ -31,17 +30,14 @@ static __noinline void handle_new_connection(void *ctx, struct sock *sk)
 }
 
 SEC("fentry/tcp_connect")
-int BPF_PROG(tcp_connect, struct sock *sk)
-{
+int BPF_PROG(tcp_connect, struct sock *sk) {
     handle_new_connection(ctx, sk);
 
     return 0;
 }
 
 SEC("fexit/inet_csk_complete_hashdance")
-int BPF_PROG(inet_csk_complete_hashdance, struct sock *sk, struct sock *child,
-    struct request_sock *req, bool own_req, struct sock *ret)
-{
+int BPF_PROG(inet_csk_complete_hashdance, struct sock *sk, struct sock *child, struct request_sock *req, bool own_req, struct sock *ret) {
     if (ret)
         handle_new_connection(ctx, ret);
 

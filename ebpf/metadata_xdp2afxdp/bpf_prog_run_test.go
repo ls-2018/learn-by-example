@@ -9,7 +9,7 @@ import (
 	"github.com/vishvananda/netlink"
 )
 
-func preparePacketData() []byte {
+func preparePacketData() []byte { //  准备好网络包内容。
 	buf := make([]byte, 14+20+8)     // eth + iph + icmph
 	be.PutUint16(buf[12:14], 0x0800) // ethertype = IPv4
 
@@ -52,7 +52,7 @@ func TestXDPProgRun(t *testing.T) {
 
 	act, err := obj.XdpFn.Run(&ebpf.RunOptions{
 		Data:    data,
-		DataOut: dataOut,
+		DataOut: dataOut, // 起始内容是 metadata，后面是网络包内容。
 	})
 	if err != nil {
 		t.Fatalf("Failed to run XDP bpf prog: %v", err)

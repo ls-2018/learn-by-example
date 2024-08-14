@@ -10,13 +10,12 @@
 #include "lib_xdp_tc.h"
 
 SEC("fentry/freplace_handler")
-int BPF_PROG(fentry_freplace_handler, struct xdp_buff *xdp)
-{
+int BPF_PROG(fentry_freplace_handler, struct xdp_buff *xdp) {
     bpf_printk("fentry, freplace handler\n");
 
-    struct ethhdr *eth = (void *)(long) BPF_CORE_READ(xdp, data);
+    struct ethhdr *eth = (void *)(long)BPF_CORE_READ(xdp, data);
     struct iphdr *iph = (void *)(eth + 1);
-    if ((void *)(iph + 1) > (void *)(long) BPF_CORE_READ(xdp, data_end))
+    if ((void *)(iph + 1) > (void *)(long)BPF_CORE_READ(xdp, data_end))
         return 0;
 
     if (BPF_CORE_READ(eth, h_proto) != bpf_htons(ETH_P_IP))
@@ -31,13 +30,12 @@ int BPF_PROG(fentry_freplace_handler, struct xdp_buff *xdp)
 }
 
 SEC("fexit/freplace_handler")
-int BPF_PROG(fexit_freplace_handler, struct xdp_buff *xdp, int retval)
-{
+int BPF_PROG(fexit_freplace_handler, struct xdp_buff *xdp, int retval) {
     bpf_printk("fexit, freplace handler\n");
 
-    struct ethhdr *eth = (void *)(long) BPF_CORE_READ(xdp, data);
+    struct ethhdr *eth = (void *)(long)BPF_CORE_READ(xdp, data);
     struct iphdr *iph = (void *)(eth + 1);
-    if ((void *)(iph + 1) > (void *)(long) BPF_CORE_READ(xdp, data_end))
+    if ((void *)(iph + 1) > (void *)(long)BPF_CORE_READ(xdp, data_end))
         return 0;
 
     if (BPF_CORE_READ(eth, h_proto) != bpf_htons(ETH_P_IP))

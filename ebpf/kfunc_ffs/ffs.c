@@ -5,9 +5,7 @@
 
 unsigned long bpf_ffs64(u64 word) __ksym;
 
-static __noinline __u64
-__ffs64(__u64 word)
-{
+static __noinline __u64 __ffs64(__u64 word) {
     __u64 shift = 0;
     if ((word & 0xffffffff) == 0) {
         word >>= 32;
@@ -37,24 +35,22 @@ __ffs64(__u64 word)
 }
 
 SEC("tc")
-int tc_ffs1(struct __sk_buff *skb)
-{
-    void *data_end = (void *)(long) skb->data_end;
-    u64 *data = (u64 *)(long) skb->data;
+int tc_ffs1(struct __sk_buff *skb) {
+    void *data_end = (void *)(long)skb->data_end;
+    u64 *data = (u64 *)(long)skb->data;
 
-    if ((void *)(u64) (data + 1) > data_end)
+    if ((void *)(u64)(data + 1) > data_end)
         return 0;
 
     return __ffs64(*data);
 }
 
 SEC("tc")
-int tc_ffs2(struct __sk_buff *skb)
-{
-    void *data_end = (void *)(long) skb->data_end;
-    u64 *data = (u64 *)(long) skb->data;
+int tc_ffs2(struct __sk_buff *skb) {
+    void *data_end = (void *)(long)skb->data_end;
+    u64 *data = (u64 *)(long)skb->data;
 
-    if ((void *)(u64) (data + 1) > data_end)
+    if ((void *)(u64)(data + 1) > data_end)
         return 0;
 
     return bpf_ffs64(*data);

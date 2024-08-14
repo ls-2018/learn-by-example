@@ -21,10 +21,9 @@ struct {
 } socks SEC(".maps");
 
 SEC("freplace/stub_handler")
-int freplace_handler(struct pt_regs *ctx)
-{
+int freplace_handler(struct pt_regs *ctx) {
     __u32 idx = 0;
-    struct sock **skp = (typeof (skp)) bpf_map_lookup_elem(&socks, &idx);
+    struct sock **skp = (typeof(skp))bpf_map_lookup_elem(&socks, &idx);
     if (!skp)
         return BPF_OK;
 

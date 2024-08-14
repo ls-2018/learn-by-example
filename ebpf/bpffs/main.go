@@ -22,7 +22,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-//go:generate go run github.com/cilium/ebpf/cmd/bpf2go -cc clang traceroute ../xdp-traceroute/traceroute.c -- -D__TARGET_ARCH_x86 -I../headers -Wall -mcpu=v3
+//go:generate bpf2go -cc clang traceroute ../xdp-traceroute/traceroute.c -- -D__TARGET_ARCH_x86 -I../headers -Wall -mcpu=v3
 
 const (
 	bpffsPath     = "./test-bpffs-dir"

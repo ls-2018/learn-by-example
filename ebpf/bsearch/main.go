@@ -19,8 +19,8 @@ import (
 	"github.com/vishvananda/netlink"
 )
 
-//go:generate go run github.com/cilium/ebpf/cmd/bpf2go -no-global-types -cc clang xdpfn ./xdp.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
-//go:generate go run github.com/cilium/ebpf/cmd/bpf2go -no-global-types -cc clang xdpfnLoop ./xdp.c -- -D__TARGET_ARCH_x86 -D__USE_LOOP -I../headers -Wall
+//go:generate bpf2go -no-global-types -cc clang xdpfn ./xdp.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
+//go:generate bpf2go -no-global-types -cc clang xdpfnLoop ./xdp.c -- -D__TARGET_ARCH_x86 -D__USE_LOOP -I../headers -Wall
 
 func main() {
 	var dev, cidrFile string

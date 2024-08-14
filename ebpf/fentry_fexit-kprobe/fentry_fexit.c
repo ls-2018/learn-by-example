@@ -3,15 +3,14 @@
  * SPDX-License-Identifier: MIT
  */
 
-// go:build ignore
+//go:build ignore
 
 #include "bpf_all.h"
 
 #include "lib_kprobe.h"
 
 SEC("fentry/kprobe")
-int BPF_PROG(fentry_kprobe, struct pt_regs *regs)
-{
+int BPF_PROG(fentry_kprobe, struct pt_regs *regs) {
     bpf_printk("tcpconn, fentry_kprobe\n");
 
     struct sock *sk;
@@ -22,8 +21,7 @@ int BPF_PROG(fentry_kprobe, struct pt_regs *regs)
 }
 
 SEC("fexit/kprobe")
-int BPF_PROG(fexit_kprobe, struct pt_regs *regs, int retval)
-{
+int BPF_PROG(fexit_kprobe, struct pt_regs *regs, int retval) {
     bpf_printk("tcpconn, fexit_kprobe\n");
 
     struct sock *sk;

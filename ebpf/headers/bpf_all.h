@@ -23,5 +23,4 @@
 
 char _license[] SEC("license") = "GPL";
 
-
 #endif // __BPF_ALL_H_

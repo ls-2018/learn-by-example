@@ -17,16 +17,12 @@ struct {
     __type(value, struct tcp_timer);
 } tcp_timers SEC(".maps");
 
-static int
-timer_cb(struct bpf_map *map, struct sk_key *key, struct tcp_timer *timer)
-{
+static int timer_cb(struct bpf_map *map, struct sk_key *key, struct tcp_timer *timer) {
     bpf_printk("timer_cb, new connection 0x%x -> 0x%x\n", key->saddr, key->daddr);
     return 0;
 }
 
-static __noinline void
-handle_new_connection(void *ctx, struct sock *sk)
-{
+static __noinline void handle_new_connection(void *ctx, struct sock *sk) {
     struct sk_key key = {};
 
     key.saddr = BPF_CORE_READ(sk, __sk_common.skc_rcv_saddr);
@@ -64,17 +60,14 @@ handle_new_connection(void *ctx, struct sock *sk)
 }
 
 SEC("fentry/tcp_connect")
-int BPF_PROG(tcp_connect, struct sock *sk)
-{
+int BPF_PROG(tcp_connect, struct sock *sk) {
     handle_new_connection(ctx, sk);
 
     return 0;
 }
 
 SEC("fexit/inet_csk_complete_hashdance")
-int BPF_PROG(inet_csk_complete_hashdance, struct sock *sk, struct sock *child,
-    struct request_sock *req, bool own_req, struct sock *ret)
-{
+int BPF_PROG(inet_csk_complete_hashdance, struct sock *sk, struct sock *child, struct request_sock *req, bool own_req, struct sock *ret) {
     if (ret)
         handle_new_connection(ctx, ret);
 

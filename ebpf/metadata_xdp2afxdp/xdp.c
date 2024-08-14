@@ -14,8 +14,7 @@ struct {
 } xdp_sockets SEC(".maps");
 
 SEC("xdp")
-int xdp_fn(struct xdp_md *ctx)
-{
+int xdp_fn(struct xdp_md *ctx) {
     void *data = ctx_ptr(ctx, data);
     void *data_end = ctx_ptr(ctx, data_end);
 
@@ -56,7 +55,7 @@ int xdp_fn(struct xdp_md *ctx)
     if ((void *)(val + 1) > data)
         return XDP_PASS;
 
-    *val = LATENCY_MS;
+    *val = LATENCY_MS; // 写入延时信息
 
     return bpf_redirect_map(&xdp_sockets, 0, 0);
 }

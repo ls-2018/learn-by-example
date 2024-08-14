@@ -13,8 +13,8 @@ import (
 
 const bpffsPath = "bpffs"
 
-//go:generate go run github.com/cilium/ebpf/cmd/bpf2go -cc clang xdptailcall ./xdp_tailcall.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
-//go:generate go run github.com/cilium/ebpf/cmd/bpf2go -cc clang tcmd ./tc_metadata.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
+//go:generate bpf2go -cc clang xdptailcall ./xdp_tailcall.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
+//go:generate bpf2go -cc clang tcmd ./tc_metadata.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
 
 var flags struct {
 	device string

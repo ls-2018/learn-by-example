@@ -6,20 +6,22 @@ import (
 	"encoding/binary"
 	"errors"
 	"flag"
+	"fmt"
+	"github.com/cilium/ebpf"
+	"github.com/cilium/ebpf/btf"
+	"github.com/cilium/ebpf/link"
+	"github.com/cilium/ebpf/perf"
+	"github.com/cilium/ebpf/rlimit"
+	"github.com/iovisor/gobpf/pkg/bpffs"
 	"log"
 	"net/netip"
 	"os"
 	"os/signal"
 	"syscall"
-
-	"github.com/cilium/ebpf"
-	"github.com/cilium/ebpf/link"
-	"github.com/cilium/ebpf/perf"
-	"github.com/cilium/ebpf/rlimit"
-	"github.com/iovisor/gobpf/pkg/bpffs"
+	"time"
 )
 
-//go:generate go run github.com/cilium/ebpf/cmd/bpf2go -cc clang tcpconn ./tcp-connecting.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
+//go:generate bpf2go -cc clang tcpconn ./tcp-connecting.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
 
 func main() {
 	var toGenBssStruct, noPin bool
@@ -68,9 +70,29 @@ func main() {
 	bssVal.Daddr = dip.As4()
 	bssVal.Dport = uint16(dport)
 
+	rc := map[string]interface{}{
+		"filter_pid":        1,
+		"filter_syscall_id": 1,
+	}
+	if err := bpfSpec.RewriteConstants(rc); err != nil {
+		log.Fatalf("Failed to rewrite const: %v", err)
+	}
+
+	//btfSpec, err = btf.LoadSpec(kernelBtf)
+	btfSpec, err := btf.LoadKernelSpec()
 	var obj tcpconnObjects
 	if !noPin {
 		bssMap := loadBssMap(bpfSpec.Maps[".bss"])
+
+		go func() {
+			fmt.Println("sleep", time.Now().String())
+			time.Sleep(time.Minute)
+			bssVal.Dport = 80
+			if err := bssMap.Put(uint32(0), bssVal); err != nil {
+				log.Fatalf("Failed to update .bss map: %v", err)
+			}
+			fmt.Println("sleep", time.Now().String())
+		}()
 		replacedMaps := make(map[string]*ebpf.Map)
 		replacedMaps[".bss"] = bssMap
 
@@ -79,6 +101,9 @@ func main() {
 		}
 
 		if err := bpfSpec.LoadAndAssign(&obj, &ebpf.CollectionOptions{
+			Programs: ebpf.ProgramOptions{
+				KernelTypes: btfSpec,
+			},
 			MapReplacements: replacedMaps,
 		}); err != nil {
 			log.Fatalf("Failed to load bpf obj: %v", err)

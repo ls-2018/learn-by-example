@@ -23,15 +23,11 @@ struct {
     __uint(type, BPF_MAP_TYPE_PERF_EVENT_ARRAY);
 } events SEC(".maps");
 
-static __always_inline void
-push_event(void *ctx, struct event *event)
-{
+static __always_inline void push_event(void *ctx, struct event *event) {
     bpf_perf_event_output(ctx, &events, BPF_F_CURRENT_CPU, event, sizeof(*event));
 }
 
-static __always_inline void
-handle_event(void *ctx, struct event *event, const char *buf, size_t len)
-{
+static __always_inline void handle_event(void *ctx, struct event *event, const char *buf, size_t len) {
     int length = len & (sizeof(event->cpus) - 1);
     bpf_probe_read_kernel(&event->cpus, length, buf);
     event->cpus_len = len;
@@ -40,9 +36,7 @@ handle_event(void *ctx, struct event *event, const char *buf, size_t len)
     push_event(ctx, event);
 }
 
-static __always_inline void
-get_netdev_rx_queue_index(struct event *event, struct netdev_rx_queue *queue)
-{
+static __always_inline void get_netdev_rx_queue_index(struct event *event, struct netdev_rx_queue *queue) {
     struct netdev_rx_queue *_rx = BPF_CORE_READ(queue, dev, _rx);
 
     event->queue = (__u64)(void *)queue;
@@ -51,9 +45,7 @@ get_netdev_rx_queue_index(struct event *event, struct netdev_rx_queue *queue)
 }
 
 SEC("fexit/store_rps_map")
-int BPF_PROG(fexit_store_rps_map, struct netdev_rx_queue *queue,
-             const char *buf, size_t len, ssize_t ret)
-{
+int BPF_PROG(fexit_store_rps_map, struct netdev_rx_queue *queue, const char *buf, size_t len, ssize_t ret) {
     struct event event = {
         .is_rps = 1,
     };
@@ -69,9 +61,7 @@ int BPF_PROG(fexit_store_rps_map, struct netdev_rx_queue *queue,
     return BPF_OK;
 }
 
-static __always_inline void
-get_netdev_tx_queue_index(struct event *event, struct netdev_queue *queue)
-{
+static __always_inline void get_netdev_tx_queue_index(struct event *event, struct netdev_queue *queue) {
     struct netdev_queue *_tx = BPF_CORE_READ(queue, dev, _tx);
 
     event->queue = (__u64)(void *)queue;
@@ -80,9 +70,7 @@ get_netdev_tx_queue_index(struct event *event, struct netdev_queue *queue)
 }
 
 SEC("fexit/xps_cpus_store")
-int BPF_PROG(fexit_xps_cpus_store, struct netdev_queue *queue,
-             const char *buf, size_t len, ssize_t ret)
-{
+int BPF_PROG(fexit_xps_cpus_store, struct netdev_queue *queue, const char *buf, size_t len, ssize_t ret) {
     struct event event = {
         .is_rps = 0,
     };

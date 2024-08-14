@@ -14,8 +14,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	"internal/pkg/bpf"
-	"internal/pkg/xdp"
+	"github.com/Asphaltt/go-nfnetlink-example/internal/pkg/bpf"
+	"github.com/Asphaltt/go-nfnetlink-example/internal/pkg/xdp"
 
 	"github.com/cilium/ebpf"
 	"github.com/cilium/ebpf/link"
@@ -25,9 +25,9 @@ import (
 	"github.com/vishvananda/netlink"
 )
 
-//go:generate go run github.com/cilium/ebpf/cmd/bpf2go -no-global-types -cc clang xdp ./xdp.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
-//go:generate go run github.com/cilium/ebpf/cmd/bpf2go -no-global-types -cc clang freplace ./freplace.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
-//go:generate go run github.com/cilium/ebpf/cmd/bpf2go -no-global-types -cc clang ff ./fentry_fexit.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
+//go:generate bpf2go -no-global-types -cc clang xdp ./xdp.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
+//go:generate bpf2go -no-global-types -cc clang freplace ./freplace.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
+//go:generate bpf2go -no-global-types -cc clang ff ./fentry_fexit.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
 
 func main() {
 	var device string

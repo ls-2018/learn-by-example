@@ -3,8 +3,7 @@
 #include "bpf_all.h"
 
 SEC("xdp")
-int xdp_ping(struct xdp_md *ctx)
-{
+int xdp_ping(struct xdp_md *ctx) {
     void *data = ctx_ptr(ctx, data);
     void *data_end = ctx_ptr(ctx, data_end);
 

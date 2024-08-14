@@ -17,8 +17,7 @@ struct {
 } socks SEC(".maps");
 
 SEC("fentry/tailcall")
-int BPF_PROG(fentry_tailcall, struct pt_regs *regs)
-{
+int BPF_PROG(fentry_tailcall, struct pt_regs *regs) {
     bpf_printk("tcpconn, fentry_tailcall\n");
 
     __u32 key = 0;
@@ -33,8 +32,7 @@ int BPF_PROG(fentry_tailcall, struct pt_regs *regs)
 }
 
 SEC("fexit/tailcall")
-int BPF_PROG(fexit_tailcall, struct pt_regs *regs, int retval)
-{
+int BPF_PROG(fexit_tailcall, struct pt_regs *regs, int retval) {
     bpf_printk("tcpconn, fexit_tailcall\n");
 
     __u32 key = 0;

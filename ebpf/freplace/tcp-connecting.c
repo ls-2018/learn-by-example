@@ -9,17 +9,13 @@
 
 char __license[] SEC("license") = "GPL";
 
-static __noinline int
-stub_handler_static()
-{
+static __noinline int stub_handler_static() {
     bpf_printk("freplace, stub handler static\n");
 
     return 0;
 }
 
-__noinline int
-stub_handler()
-{
+__noinline int stub_handler() {
     bpf_printk("freplace, stub handler\n");
 
     return 0;
@@ -34,9 +30,7 @@ struct {
     __uint(type, BPF_MAP_TYPE_PERF_EVENT_ARRAY);
 } events SEC(".maps");
 
-static __noinline
-void handle_new_connection(struct pt_regs *ctx, struct sock *sk)
-{
+static __noinline void handle_new_connection(struct pt_regs *ctx, struct sock *sk) {
     event_t ev = {};
 
     ev.saddr = BPF_CORE_READ(sk, __sk_common.skc_rcv_saddr);
@@ -48,8 +42,7 @@ void handle_new_connection(struct pt_regs *ctx, struct sock *sk)
 }
 
 SEC("kprobe/tcp_connect")
-int k_tcp_connect(struct pt_regs *ctx)
-{
+int k_tcp_connect(struct pt_regs *ctx) {
     struct sock *sk;
     sk = (typeof(sk))PT_REGS_PARM1(ctx);
 
@@ -61,8 +54,7 @@ int k_tcp_connect(struct pt_regs *ctx)
 }
 
 SEC("kprobe/inet_csk_complete_hashdance")
-int k_icsk_complete_hashdance(struct pt_regs *ctx)
-{
+int k_icsk_complete_hashdance(struct pt_regs *ctx) {
     struct sock *sk;
     sk = (typeof(sk))PT_REGS_PARM2(ctx);
 

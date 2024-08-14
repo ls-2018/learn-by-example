@@ -34,16 +34,15 @@ struct delay_ctx {
     bool found;
 };
 
-static long loop_delay_cidrs(__u32 index, struct delay_ctx *ctx)
-{
-    if (!ctx)                               // It's required to check NULL ctx.
+static long loop_delay_cidrs(__u32 index, struct delay_ctx *ctx) {
+    if (!ctx) // It's required to check NULL ctx.
         return 1;
 
-    if (ctx->lo > ctx->hi)                  // Checking lo > hi for the end of binary search.
+    if (ctx->lo > ctx->hi) // Checking lo > hi for the end of binary search.
         return 1;
 
     __u32 mid = (ctx->lo + ctx->hi) >> 1;
-    if (mid >= DELAY_CIDR_CAPACITY)         // It's required to do bound check for mid.
+    if (mid >= DELAY_CIDR_CAPACITY) // It's required to do bound check for mid.
         return 1;
 
     struct delay_cidr *cidr = (typeof(cidr))&delay_cidrs.cidrs[mid];
@@ -54,16 +53,15 @@ static long loop_delay_cidrs(__u32 index, struct delay_ctx *ctx)
 
     if (ctx->ip < cidr->start) {
         ctx->hi = mid - 1;
-    } else {
+    }
+    else {
         ctx->lo = mid + 1;
     }
 
     return 0;
 }
 
-static __always_inline bool
-__should_delay_sip(__be32 ip)
-{
+static __always_inline bool __should_delay_sip(__be32 ip) {
     struct delay_ctx ctx = {
         .lo = 0,
         .hi = delay_cidrs_len - 1,
@@ -78,20 +76,18 @@ __should_delay_sip(__be32 ip)
 
 #else
 
-static __always_inline bool
-__should_delay_sip(__be32 ip)
-{
+static __always_inline bool __should_delay_sip(__be32 ip) {
     __u32 lo = 0;
-    volatile __u32 hi = delay_cidrs_len - 1;    // Note: volatile is to avoid reusing R2 register.
+    volatile __u32 hi = delay_cidrs_len - 1; // Note: volatile is to avoid reusing R2 register.
     __u32 addr = bpf_ntohl(ip);
 
-#pragma clang loop unroll(full)                 // It's optional to use unroll pragma. Or the verifier will take long time to emulate this loop.
+#    pragma clang loop unroll(full) // It's optional to use unroll pragma. Or the verifier will take long time to emulate this loop.
     for (int i = 0; i < 32; i++) {
-        if (lo > hi)                            // Checking lo > hi for the end of binary search.
+        if (lo > hi) // Checking lo > hi for the end of binary search.
             return false;
 
         __u32 mid = (lo + hi) >> 1;
-        if (mid >= DELAY_CIDR_CAPACITY)         // It's required to do bound check for mid.
+        if (mid >= DELAY_CIDR_CAPACITY) // It's required to do bound check for mid.
             return false;
 
         struct delay_cidr *cidr = (typeof(cidr))&delay_cidrs.cidrs[mid];
@@ -101,7 +97,8 @@ __should_delay_sip(__be32 ip)
 
         if (addr < cidr->start) {
             hi = mid - 1;
-        } else {
+        }
+        else {
             lo = mid + 1;
         }
     }
@@ -112,8 +109,7 @@ __should_delay_sip(__be32 ip)
 #endif // __USE_LOOP
 
 SEC("xdp")
-int xdp_fn(struct xdp_md *ctx)
-{
+int xdp_fn(struct xdp_md *ctx) {
     void *data = ctx_ptr(ctx, data);
     void *data_end = ctx_ptr(ctx, data_end);
 

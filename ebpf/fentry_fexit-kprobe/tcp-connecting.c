@@ -16,8 +16,7 @@ struct {
 } progs SEC(".maps");
 
 SEC("kprobe/hanle_new_connection")
-int handle_new_connection(struct pt_regs *ctx)
-{
+int handle_new_connection(struct pt_regs *ctx) {
     bpf_printk("tcpconn, handle_new_connection\n");
 
     struct sock *sk;
@@ -28,16 +27,14 @@ int handle_new_connection(struct pt_regs *ctx)
 }
 
 SEC("kprobe/tcp_connect")
-int k_tcp_connect(struct pt_regs *ctx)
-{
+int k_tcp_connect(struct pt_regs *ctx) {
     bpf_tail_call_static(ctx, &progs, 0);
 
     return 0;
 }
 
 SEC("kprobe/inet_csk_complete_hashdance")
-int k_icsk_complete_hashdance(struct pt_regs *ctx)
-{
+int k_icsk_complete_hashdance(struct pt_regs *ctx) {
     bpf_tail_call_static(ctx, &progs, 0);
 
     return 0;

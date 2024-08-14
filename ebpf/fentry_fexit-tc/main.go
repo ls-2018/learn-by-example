@@ -15,8 +15,8 @@ import (
 	"syscall"
 	"unsafe"
 
-	"internal/pkg/bpf"
-	_tc "internal/pkg/tc"
+	"github.com/Asphaltt/go-nfnetlink-example/internal/pkg/bpf"
+	_tc "github.com/Asphaltt/go-nfnetlink-example/internal/pkg/tc"
 
 	"github.com/cilium/ebpf"
 	"github.com/cilium/ebpf/link"
@@ -30,7 +30,7 @@ import (
 	"golang.org/x/sys/unix"
 )
 
-//go:generate go run github.com/cilium/ebpf/cmd/bpf2go -cc clang fftc ./tc.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
+//go:generate bpf2go -cc clang fftc ./tc.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
 
 func main() {
 	var device string

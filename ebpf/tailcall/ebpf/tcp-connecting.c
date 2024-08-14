@@ -32,8 +32,7 @@ struct {
 } events SEC(".maps");
 
 SEC("kprobe/hanle_new_connection")
-int handle_new_connection(void *ctx)
-{
+int handle_new_connection(void *ctx) {
     __u32 key = 0;
     struct sock **skp = bpf_map_lookup_elem(&socks, &key);
     if (!skp)
@@ -54,22 +53,20 @@ int handle_new_connection(void *ctx)
 }
 
 SEC("kprobe/tcp_connect")
-int k_tcp_connect(struct pt_regs *ctx)
-{
+int k_tcp_connect(struct pt_regs *ctx) {
     struct sock *sk;
     sk = (typeof(sk))PT_REGS_PARM1(ctx);
 
     __u32 key = 0;
     bpf_map_update_elem(&socks, &key, &sk, BPF_ANY);
 
-    bpf_tail_call_static(ctx, &progs, 0);   // static tailcall
+    bpf_tail_call_static(ctx, &progs, 0); // static tailcall
 
     return 0;
 }
 
 SEC("kprobe/inet_csk_complete_hashdance")
-int k_icsk_complete_hashdance(struct pt_regs *ctx)
-{
+int k_icsk_complete_hashdance(struct pt_regs *ctx) {
     struct sock *sk;
     sk = (typeof(sk))PT_REGS_PARM2(ctx);
 
@@ -77,7 +74,7 @@ int k_icsk_complete_hashdance(struct pt_regs *ctx)
     bpf_map_update_elem(&socks, &key, &sk, BPF_ANY);
 
     u32 idx = BPF_CORE_READ(sk, __sk_common.skc_daddr);
-    bpf_tail_call(ctx, &progs, idx);        // dynamic tailcall
+    bpf_tail_call(ctx, &progs, idx); // dynamic tailcall
 
     return 0;
 }

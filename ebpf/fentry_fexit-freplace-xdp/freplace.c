@@ -10,11 +10,10 @@
 #include "lib_xdp_tc.h"
 
 SEC("freplace/stub_handler")
-int freplace_handler(struct xdp_md *xdp)
-{
-    struct ethhdr *eth = (void *)(long) xdp->data;
+int freplace_handler(struct xdp_md *xdp) {
+    struct ethhdr *eth = (void *)(long)xdp->data;
     struct iphdr *iph = (void *)(eth + 1);
-    if ((void *)(iph + 1) > (void *)(long) xdp->data_end)
+    if ((void *)(iph + 1) > (void *)(long)xdp->data_end)
         return 0;
 
     if (BPF_CORE_READ(eth, h_proto) != bpf_htons(ETH_P_IP))

@@ -19,10 +19,9 @@ struct {
 } socks SEC(".maps");
 
 SEC("kprobe/tailcall")
-int k_tailcall(struct pt_regs *ctx)
-{
+int k_tailcall(struct pt_regs *ctx) {
     __u32 idx = 0;
-    struct sock **skp = (typeof (skp)) bpf_map_lookup_elem(&socks, &idx);
+    struct sock **skp = (typeof(skp))bpf_map_lookup_elem(&socks, &idx);
     if (!skp)
         return BPF_OK;
 
@@ -33,8 +32,7 @@ int k_tailcall(struct pt_regs *ctx)
 }
 
 SEC("freplace/stub_handler")
-int freplace_handler(struct pt_regs *ctx)
-{
+int freplace_handler(struct pt_regs *ctx) {
     bpf_tail_call_static(ctx, &progs, 0);
 
     return BPF_OK;

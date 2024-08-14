@@ -12,7 +12,7 @@ import (
 	flag "github.com/spf13/pflag"
 )
 
-//go:generate go run github.com/cilium/ebpf/cmd/bpf2go -cc clang itertcp4 ./bpf_iter_tcp4.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
+//go:generate bpf2go -cc clang itertcp4 ./bpf_iter_tcp4.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
 
 func main() {
 	var hz uint32

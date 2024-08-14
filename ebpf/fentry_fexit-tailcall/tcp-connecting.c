@@ -23,8 +23,7 @@ struct {
 } socks SEC(".maps");
 
 SEC("kprobe/hanle_new_connection")
-int handle_new_connection(struct pt_regs *ctx)
-{
+int handle_new_connection(struct pt_regs *ctx) {
     __u32 key = 0;
     struct sock **skp = bpf_map_lookup_elem(&socks, &key);
     if (!skp)
@@ -39,8 +38,7 @@ int handle_new_connection(struct pt_regs *ctx)
 }
 
 SEC("kprobe/tcp_connect")
-int k_tcp_connect(struct pt_regs *ctx)
-{
+int k_tcp_connect(struct pt_regs *ctx) {
     struct sock *sk;
     sk = (typeof(sk))PT_REGS_PARM1(ctx);
 
@@ -53,8 +51,7 @@ int k_tcp_connect(struct pt_regs *ctx)
 }
 
 SEC("kprobe/inet_csk_complete_hashdance")
-int k_icsk_complete_hashdance(struct pt_regs *ctx)
-{
+int k_icsk_complete_hashdance(struct pt_regs *ctx) {
     struct sock *sk;
     sk = (typeof(sk))PT_REGS_PARM2(ctx);
 

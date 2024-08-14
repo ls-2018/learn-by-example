@@ -21,9 +21,10 @@ struct {
 __be32 filter_daddr;
 __be16 filter_dport;
 
-static __always_inline void
-handle_new_connection(void *ctx, struct sock *sk)
-{
+static volatile const __u32 filter_pid = 0;
+static volatile const __u32 filter_syscall_id = 0;
+
+static __always_inline void handle_new_connection(void *ctx, struct sock *sk) {
     event_t ev = {};
 
     ev.saddr = BPF_CORE_READ(sk, __sk_common.skc_rcv_saddr);
@@ -36,8 +37,7 @@ handle_new_connection(void *ctx, struct sock *sk)
 }
 
 SEC("kprobe/tcp_connect")
-int k_tcp_connect(struct pt_regs *ctx)
-{
+int k_tcp_connect(struct pt_regs *ctx) {
     struct sock *sk;
     sk = (typeof(sk))PT_REGS_PARM1(ctx);
 
@@ -47,8 +47,7 @@ int k_tcp_connect(struct pt_regs *ctx)
 }
 
 SEC("kprobe/inet_csk_complete_hashdance")
-int k_icsk_complete_hashdance(struct pt_regs *ctx)
-{
+int k_icsk_complete_hashdance(struct pt_regs *ctx) {
     struct sock *sk;
     sk = (typeof(sk))PT_REGS_PARM2(ctx);
 

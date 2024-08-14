@@ -15,16 +15,13 @@ struct {
 } prog_array SEC(".maps");
 
 SEC("xdp")
-int xdp_prog1(struct xdp_md *ctx)
-{
+int xdp_prog1(struct xdp_md *ctx) {
     bpf_printk("tailcall-in-bpf2bpf: xdp_prog1\n");
 
     return XDP_PASS;
 }
 
-static __noinline int
-tailcall1(struct xdp_md *ctx)
-{
+static __noinline int tailcall1(struct xdp_md *ctx) {
     int retval = XDP_ABORTED;
 
     bpf_tail_call_static(ctx, &prog_array, 0);
@@ -32,9 +29,7 @@ tailcall1(struct xdp_md *ctx)
     return retval;
 }
 
-static __noinline int
-tailcall2(struct xdp_md *ctx)
-{
+static __noinline int tailcall2(struct xdp_md *ctx) {
     volatile int retval = XDP_ABORTED;
 
     bpf_tail_call_static(ctx, &prog_array, 0);
@@ -43,16 +38,15 @@ tailcall2(struct xdp_md *ctx)
 }
 
 SEC("xdp")
-int xdp_entry(struct xdp_md *ctx)
-{
+int xdp_entry(struct xdp_md *ctx) {
     struct ethhdr *eth;
     struct iphdr *iph;
     int retval;
 
-    eth = (struct ethhdr *) ctx_ptr(ctx, data);
+    eth = (struct ethhdr *)ctx_ptr(ctx, data);
     iph = (struct iphdr *)(eth + 1);
 
-    if ((void *) (iph + 1) > ctx_ptr(ctx, data_end))
+    if ((void *)(iph + 1) > ctx_ptr(ctx, data_end))
         return XDP_PASS;
 
     if (eth->h_proto != bpf_htons(ETH_P_IP) || iph->protocol != IPPROTO_ICMP)

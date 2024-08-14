@@ -16,8 +16,7 @@ struct {
 } xdp_progs SEC(".maps");
 
 SEC("xdp")
-int xdp_fn(struct xdp_md *ctx)
-{
+int xdp_fn(struct xdp_md *ctx) {
     __u32 *val;
 
     // Note: do not bpf_xdp_adjust_meta again.
@@ -36,8 +35,7 @@ int xdp_fn(struct xdp_md *ctx)
 }
 
 SEC("xdp")
-int xdp_tailcall(struct xdp_md *ctx)
-{
+int xdp_tailcall(struct xdp_md *ctx) {
     __u32 *val;
     const int siz = sizeof(*val);
 

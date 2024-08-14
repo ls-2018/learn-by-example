@@ -25,17 +25,14 @@ struct {
     __uint(value_size, sizeof(__u32));
 } errmsg_pb SEC(".maps");
 
-static __always_inline void
-__output_msg(void *ctx, char *msg, enum probing_type probe_type, int retval)
-{
+static __always_inline void __output_msg(void *ctx, char *msg, enum probing_type probe_type, int retval) {
     struct errmsg errmsg;
     long len = bpf_probe_read_kernel_str(&errmsg.msg, sizeof(errmsg.msg), msg);
 
     errmsg.len = len;
     errmsg.probe_type = probe_type;
     errmsg.retval = retval;
-    bpf_perf_event_output(ctx, &errmsg_pb, BPF_F_CURRENT_CPU, &errmsg,
-        sizeof(errmsg));
+    bpf_perf_event_output(ctx, &errmsg_pb, BPF_F_CURRENT_CPU, &errmsg, sizeof(errmsg));
 }
 
 #endif // __LIB_TP_MSG_H_

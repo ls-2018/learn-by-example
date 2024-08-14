@@ -9,9 +9,7 @@
 
 #include "lib_xdp_tc.h"
 
-static __always_inline void
-handle_xdp(void *ctx, struct xdp_buff *xdp, int verdict, bool is_fexit)
-{
+static __always_inline void handle_xdp(void *ctx, struct xdp_buff *xdp, int verdict, bool is_fexit) {
     struct ethhdr *eth = (void *)(long)BPF_CORE_READ(xdp, data);
     struct iphdr *iph = (void *)(eth + 1);
     if ((void *)(iph + 1) > (void *)(long)BPF_CORE_READ(xdp, data_end))
@@ -27,21 +25,18 @@ handle_xdp(void *ctx, struct xdp_buff *xdp, int verdict, bool is_fexit)
 }
 
 SEC("fentry/xdp")
-int BPF_PROG(fentry_xdp, struct xdp_buff *xdp)
-{
+int BPF_PROG(fentry_xdp, struct xdp_buff *xdp) {
     handle_xdp(ctx, xdp, 0, false);
     return 0;
 }
 
 SEC("fexit/xdp")
-int BPF_PROG(fexit_xdp, struct xdp_buff *xdp, int verdict)
-{
+int BPF_PROG(fexit_xdp, struct xdp_buff *xdp, int verdict) {
     handle_xdp(ctx, xdp, verdict, true);
     return 0;
 }
 
 SEC("xdp")
-int dummy(struct xdp_md *ctx)
-{
+int dummy(struct xdp_md *ctx) {
     return XDP_PASS;
 }

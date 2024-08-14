@@ -21,9 +21,9 @@ import (
 	flag "github.com/spf13/pflag"
 )
 
-//go:generate go run github.com/cilium/ebpf/cmd/bpf2go -cc clang tcpconn ./tcp-connecting.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
-//go:generate go run github.com/cilium/ebpf/cmd/bpf2go -cc clang fentry ./fentry.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
-//go:generate go run github.com/cilium/ebpf/cmd/bpf2go -cc clang fexit ./fexit.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
+//go:generate bpf2go -cc clang tcpconn ./tcp-connecting.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
+//go:generate bpf2go -cc clang fentry ./fentry.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
+//go:generate bpf2go -cc clang fexit ./fexit.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
 
 const nTailcalls = 36
 

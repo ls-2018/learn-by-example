@@ -8,8 +8,7 @@
 #include "bpf_all.h"
 
 SEC("freplace/stub_handler")
-int freplace_handler()
-{
+int freplace_handler() {
     bpf_printk("freplace, replaced handler\n");
 
     return 0;

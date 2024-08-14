@@ -18,9 +18,7 @@ struct {
     __uint(max_entries, 6);
 } redirect_map SEC(".maps");
 
-static __always_inline void
-handle_xdp(struct xdp_md *xdp, enum probing_type type, int cpu)
-{
+static __always_inline void handle_xdp(struct xdp_md *xdp, enum probing_type type, int cpu) {
     void *data_end = ctx_ptr(xdp, data_end);
     void *data = ctx_ptr(xdp, data);
     struct ethhdr *eth = data;
@@ -33,9 +31,7 @@ handle_xdp(struct xdp_md *xdp, enum probing_type type, int cpu)
     __handle_packet(xdp, iph, type, cpu);
 }
 
-static __always_inline bool
-__is_icmp(struct xdp_md *xdp)
-{
+static __always_inline bool __is_icmp(struct xdp_md *xdp) {
     void *data_end = ctx_ptr(xdp, data_end);
     void *data = ctx_ptr(xdp, data);
     struct ethhdr *eth = data;
@@ -49,8 +45,7 @@ __is_icmp(struct xdp_md *xdp)
 }
 
 SEC("xdp/native")
-int xdp_native(struct xdp_md *ctx)
-{
+int xdp_native(struct xdp_md *ctx) {
     if (!__is_icmp(ctx))
         return XDP_PASS;
 
@@ -62,8 +57,7 @@ int xdp_native(struct xdp_md *ctx)
 }
 
 SEC("xdp_cpumap/3")
-int xdp_cpumap(struct xdp_md *ctx)
-{
+int xdp_cpumap(struct xdp_md *ctx) {
     int cpu = bpf_get_smp_processor_id();
 
     handle_xdp(ctx, PROBE_TYPE_FENTRY, cpu);

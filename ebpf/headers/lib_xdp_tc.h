@@ -6,8 +6,7 @@
 
 #include "bpf_all.h"
 
-#define __IS_INVALID_HDR(hdr, data_end) \
-    ((void *)(hdr) + sizeof(*(hdr)) > (void *)(data_end))
+#define __IS_INVALID_HDR(hdr, data_end) ((void *)(hdr) + sizeof(*(hdr)) > (void *)(data_end))
 
 enum probing_type {
     PROBE_TYPE_DEFAULT = 0,
@@ -29,9 +28,7 @@ struct {
     __uint(value_size, 4);
 } events SEC(".maps");
 
-static __always_inline void
-__handle_packet(void *ctx, struct iphdr *iph, enum probing_type type, int verdict)
-{
+static __always_inline void __handle_packet(void *ctx, struct iphdr *iph, enum probing_type type, int verdict) {
     event_t ev = {};
     ev.saddr = BPF_CORE_READ(iph, saddr);
     ev.daddr = BPF_CORE_READ(iph, daddr);

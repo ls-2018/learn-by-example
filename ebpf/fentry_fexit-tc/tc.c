@@ -9,9 +9,7 @@
 
 #include "lib_xdp_tc.h"
 
-static __always_inline void
-handle_tc(void *ctx, struct sk_buff *skb, enum probing_type type, int verdict)
-{
+static __always_inline void handle_tc(void *ctx, struct sk_buff *skb, enum probing_type type, int verdict) {
     void *head = (void *)(long)BPF_CORE_READ(skb, head);
     __u16 l2_off = BPF_CORE_READ(skb, mac_header);
     __u16 l3_off = BPF_CORE_READ(skb, network_header);
@@ -28,62 +26,51 @@ handle_tc(void *ctx, struct sk_buff *skb, enum probing_type type, int verdict)
 }
 
 SEC("fentry/tc")
-int BPF_PROG(fentry_tc, struct sk_buff *skb)
-{
+int BPF_PROG(fentry_tc, struct sk_buff *skb) {
     handle_tc(ctx, skb, PROBE_TYPE_FENTRY, 0);
     return 0;
 }
 
 SEC("fexit/tc")
-int BPF_PROG(fexit_tc, struct sk_buff *skb, int verdict)
-{
+int BPF_PROG(fexit_tc, struct sk_buff *skb, int verdict) {
     handle_tc(ctx, skb, PROBE_TYPE_FEXIT, verdict);
     return 0;
 }
 
 SEC("tc")
-int dummy(struct __sk_buff *skb)
-{
+int dummy(struct __sk_buff *skb) {
     return TC_ACT_OK;
 }
 
-__noinline int
-subprog1(void)
-{
-	bpf_printk("Here's subprog1.\n");
+__noinline int subprog1(void) {
+    bpf_printk("Here's subprog1.\n");
 
     return 0;
 }
 
-__noinline int
-subprog2(void)
-{
-	bpf_printk("Here's subprog2.\n");
+__noinline int subprog2(void) {
+    bpf_printk("Here's subprog2.\n");
 
     return 0;
 }
 
-__noinline int
-subprog3(void)
-{
-	bpf_printk("Here's subprog3.\n");
+__noinline int subprog3(void) {
+    bpf_printk("Here's subprog3.\n");
 
     return 0;
 }
 
 SEC("tc")
-int entry1(struct __sk_buff *skb)
-{
-	subprog1();
-	subprog2();
+int entry1(struct __sk_buff *skb) {
+    subprog1();
+    subprog2();
 
-	return TC_ACT_OK;
+    return TC_ACT_OK;
 }
 
 SEC("tc")
-int entry2(struct __sk_buff *skb)
-{
-	subprog3();
+int entry2(struct __sk_buff *skb) {
+    subprog3();
 
-	return TC_ACT_OK;
+    return TC_ACT_OK;
 }

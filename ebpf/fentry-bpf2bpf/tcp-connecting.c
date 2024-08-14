@@ -8,15 +8,12 @@
 
 #include "lib_kprobe.h"
 
-static __noinline void
-handle_new_connection(struct pt_regs *ctx, struct sock *sk)
-{
+static __noinline void handle_new_connection(struct pt_regs *ctx, struct sock *sk) {
     __handle_new_connection(ctx, sk, PROBE_TYPE_DEFAULT, 0);
 }
 
 SEC("kprobe/tcp_connect")
-int k_tcp_connect(struct pt_regs *ctx)
-{
+int k_tcp_connect(struct pt_regs *ctx) {
     struct sock *sk;
     sk = (typeof(sk))PT_REGS_PARM1(ctx);
 

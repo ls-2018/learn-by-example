@@ -14,7 +14,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	"internal/pkg/xdp"
+	"github.com/Asphaltt/go-nfnetlink-example/internal/pkg/xdp"
 
 	"github.com/cilium/ebpf"
 	"github.com/cilium/ebpf/link"
@@ -24,7 +24,7 @@ import (
 	"github.com/vishvananda/netlink"
 )
 
-//go:generate go run github.com/cilium/ebpf/cmd/bpf2go -cc clang xdp ./xdp.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
+//go:generate bpf2go -cc clang xdp ./xdp.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
 
 type CPUVal struct {
 	Qsize uint32

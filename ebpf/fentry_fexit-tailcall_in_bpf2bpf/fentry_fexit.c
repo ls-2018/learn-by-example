@@ -21,8 +21,7 @@ struct {
 } socks SEC(".maps");
 
 SEC("fentry/freplace_handler")
-int BPF_PROG(fentry_freplace_handler, struct pt_regs *regs)
-{
+int BPF_PROG(fentry_freplace_handler, struct pt_regs *regs) {
     bpf_printk("fentry, freplace handler, regs:%p\n", regs);
 
     __u32 key = 0;
@@ -37,8 +36,7 @@ int BPF_PROG(fentry_freplace_handler, struct pt_regs *regs)
 }
 
 SEC("fexit/freplace_handler")
-int BPF_PROG(fexit_freplace_handler, struct pt_regs *regs, int retval)
-{
+int BPF_PROG(fexit_freplace_handler, struct pt_regs *regs, int retval) {
     bpf_printk("fexit, freplace handler, regs:%p\n", regs);
 
     __u32 key = 0;

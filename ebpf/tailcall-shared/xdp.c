@@ -14,8 +14,7 @@ struct {
 } progs SEC(".maps");
 
 SEC("xdp")
-int xdp_entry(struct xdp_md *ctx)
-{
+int xdp_entry(struct xdp_md *ctx) {
     bpf_printk("tcpconn, xdp_entry\n");
 
     bpf_tail_call_static(ctx, &progs, 0);

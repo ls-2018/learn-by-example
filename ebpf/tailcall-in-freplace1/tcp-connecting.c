@@ -13,17 +13,14 @@ struct {
     __uint(max_entries, 1);
 } socks SEC(".maps");
 
-__noinline int
-stub_handler(struct pt_regs *ctx)
-{
+__noinline int stub_handler(struct pt_regs *ctx) {
     bpf_printk("freplace, stub handler, regs: %p\n", ctx);
 
     return 0;
 }
 
 SEC("kprobe/tcp_connect")
-int k_tcp_connect(struct pt_regs *ctx)
-{
+int k_tcp_connect(struct pt_regs *ctx) {
     struct sock *sk;
     sk = (typeof(sk))PT_REGS_PARM1(ctx);
 
@@ -38,8 +35,7 @@ int k_tcp_connect(struct pt_regs *ctx)
 }
 
 SEC("kprobe/inet_csk_complete_hashdance")
-int k_icsk_complete_hashdance(struct pt_regs *ctx)
-{
+int k_icsk_complete_hashdance(struct pt_regs *ctx) {
     struct sock *sk;
     sk = (typeof(sk))PT_REGS_PARM2(ctx);
 
