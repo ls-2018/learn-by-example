@@ -40,3 +40,16 @@
 - tproxy-experiment
 - xdp_acl
 - xdpsnoop
+
+
+
+# map
+```
+├── iptables
+│   └── nfqueue                 # Netfilter队列，允许iptables的数据包经过用户空间程序的处理后再决定是否接受、拒绝或修改这些数据包
+
+
+```
+
+
+- https://blog.csdn.net/weixin_40539956/article/details/137938104
