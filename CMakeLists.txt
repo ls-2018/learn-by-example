@@ -8,6 +8,8 @@ include_directories(
 )
 
 # 无用
-#add_library(
-#        test
-#)
+add_library(
+        test
+        ebpf/acl/acl.c
+        headers/vmlinux.h
+)

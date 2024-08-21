@@ -1,0 +1,23 @@
+docker pull registry.cn-hongkong.aliyuncs.com/deepflow-ce/mysql:8.0.31
+docker pull registry.cn-hongkong.aliyuncs.com/deepflow-ce/deepflowio-stella-agent-ce:latest
+docker pull registry.cn-hongkong.aliyuncs.com/deepflow-ce/deepflowio-init-grafana:v6.5
+docker pull registry.cn-hongkong.aliyuncs.com/deepflow-ce/deepflowio-init-grafana-ds-dh:latest
+docker pull registry.cn-hongkong.aliyuncs.com/deepflow-ce/deepflow-server:v6.5
+docker pull registry.cn-hongkong.aliyuncs.com/deepflow-ce/deepflow-app:v6.5
+docker pull registry.cn-hongkong.aliyuncs.com/deepflow-ce/deepflow-agent:v6.5
+docker pull registry.cn-hongkong.aliyuncs.com/deepflow-ce/clickhouse-server:23.8.7.24
+docker pull registry.cn-beijing.aliyuncs.com/deepflow-ce/grafana:10.4.3
+
+
+kind load docker-image --name koord registry.cn-hongkong.aliyuncs.com/deepflow-ce/mysql:8.0.31
+kind load docker-image --name koord registry.cn-hongkong.aliyuncs.com/deepflow-ce/deepflowio-stella-agent-ce:latest
+kind load docker-image --name koord registry.cn-hongkong.aliyuncs.com/deepflow-ce/deepflowio-init-grafana:v6.5
+kind load docker-image --name koord registry.cn-hongkong.aliyuncs.com/deepflow-ce/deepflowio-init-grafana-ds-dh:latest
+kind load docker-image --name koord registry.cn-hongkong.aliyuncs.com/deepflow-ce/deepflow-server:v6.5
+kind load docker-image --name koord registry.cn-hongkong.aliyuncs.com/deepflow-ce/deepflow-app:v6.5
+kind load docker-image --name koord registry.cn-hongkong.aliyuncs.com/deepflow-ce/deepflow-agent:v6.5
+kind load docker-image --name koord registry.cn-hongkong.aliyuncs.com/deepflow-ce/clickhouse-server:23.8.7.24
+kind load docker-image --name koord registry.cn-beijing.aliyuncs.com/deepflow-ce/grafana:10.4.3
+
+
+

@@ -1,7 +1,7 @@
 CLANG := clang
-CLANG_INCLUDE := -I./ebpf/headers
+CLANG_INCLUDE := -I../../headers
 
-EBPF_SOURCE := ./ebpf/acl.c
+EBPF_SOURCE := ./acl.c
 EBPF_BINARY := iptables-ebpf-acl.elf
 EBPF_PINNED := /sys/fs/bpf/ipt_acl
 

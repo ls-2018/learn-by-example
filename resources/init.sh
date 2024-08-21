@@ -85,10 +85,10 @@ EOF
 	#	unset https_proxy && unset http_proxy && unset all_proxy
 
 	if [ "$ARCH" == "amd64" ]; then
-#		ln -s /usr/include/x86_64-linux-gnu/asm /usr/include/asm
+		ln -s /usr/include/x86_64-linux-gnu/asm /usr/include/asm
 	fi
 	if [ "$ARCH" == "arm64" ]; then
-#		ln -s /usr/include/aarch64-linux-gnu/asm /usr/include/asm
+		ln -s /usr/include/aarch64-linux-gnu/asm /usr/include/asm
 	fi
 
 }
@@ -123,6 +123,9 @@ EOF
 	go install github.com/trzsz/trzsz-go/cmd/...@latest
 	go install github.com/go-delve/delve/cmd/dlv@master
 
+	git clone https://github.com/cilium/ebpf.git /tmp/ebpf
+  cd /tmp/ebpf/cmd/bpf2go && go install .
+
 }
 
 function install_clang() {
@@ -144,8 +147,15 @@ EOF
 	clang++ --version
 }
 
+function install_tools() {
+    apt install htop vim clang llvm git -y
+}
 
 init_repo
 install_python
 install_bcc
 install_go
+install_tools
+
+
+

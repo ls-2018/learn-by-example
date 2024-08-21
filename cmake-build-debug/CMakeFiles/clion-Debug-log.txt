@@ -1,0 +1,4 @@
+/.jbdevcontainer/JetBrains/RemoteDev/dist/caf2b64179685_CLion-2024.2.0.1/bin/cmake/linux/x64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "Unix Makefiles" -S /root/learn-by-example -B /root/learn-by-example/cmake-build-debug
+-- Configuring done (0.1s)
+-- Generating done (0.3s)
+-- Build files have been written to: /root/learn-by-example/cmake-build-debug
