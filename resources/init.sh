@@ -38,8 +38,6 @@ EOF
 	echo 'nameserver 114.114.114.114' >/etc/resolv.conf
 	echo -e 'root\nroot\n' | passwd root
 	apt clean all
-	apt clean all
-	apt clean all
 	apt-get update -y
 }
 
@@ -87,10 +85,10 @@ EOF
 	#	unset https_proxy && unset http_proxy && unset all_proxy
 
 	if [ "$ARCH" == "amd64" ]; then
-		ln -s /usr/include/x86_64-linux-gnu/asm /usr/include/asm
+#		ln -s /usr/include/x86_64-linux-gnu/asm /usr/include/asm
 	fi
 	if [ "$ARCH" == "arm64" ]; then
-		ln -s /usr/include/aarch64-linux-gnu/asm /usr/include/asm
+#		ln -s /usr/include/aarch64-linux-gnu/asm /usr/include/asm
 	fi
 
 }
@@ -146,10 +144,6 @@ EOF
 	clang++ --version
 }
 
-function prepare_ebpf() {
-	wget https://aka.pw/bpf-ecli -O /usr/bin/ecli && chmod +x /usr/bin/ecli
-	wget https://github.com/eunomia-bpf/eunomia-bpf/releases/download/v1.0.21/ecc -O /usr/bin/ecc && chmod +x /usr/bin/ecc
-}
 
 init_repo
 install_python

@@ -30,7 +30,7 @@ struct {
 } filter_rules SEC(".maps");
 
 SEC("socket")
-int filter_iptables(void *skb) {
+int filter_iptables(struct bpf_sock_ops *skb) {
     struct iphdr iph;
     struct rule_struct result, *saddr, *daddr;
     u32 *res;

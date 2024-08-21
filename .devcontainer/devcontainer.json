@@ -1,0 +1,26 @@
+{
+  "name": "learn-by-example",
+  "build": {
+    "context": "..",
+    "dockerfile": "../Dockerfile"
+  },
+  "workspaceFolder": "/root/learn-by-example",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/root/learn-by-example,type=bind",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+    "ghcr.io/devcontainers/features/go:1": {
+      "version": "1.22"
+    }
+  },
+  "onCreateCommand": "sleep 1",
+  "postAttachCommand": {
+    "Runs all non-integration tests that do not require `root` privileges": "sleep 2",
+  },
+  "remoteUser": "root",
+  "runArgs": [
+    "--ipc=host",
+    "--volume=/dev:/dev",
+    "--volume=/run/udev:/run/udev",
+    "--privileged"
+  ]
+}
