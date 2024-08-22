@@ -1,8 +1,3 @@
-<!--
- Copyright 2023 Leon Hwang.
- SPDX-License-Identifier: MIT
--->
-
 ```
 本文介绍了如何使用 XDP 来支持 traceroute 和 mtr，主要的处理逻辑是：
 
@@ -35,7 +30,7 @@ Flags:
 ## Example
 
 ```bash
-# ./xdp-traceroute --dev enp0s1
+# ./xdp-traceroute --dev enp0s5
 2023/12/17 06:20:36 traceroute is running on enp0s1
 ```
 

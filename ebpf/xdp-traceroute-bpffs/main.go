@@ -1,8 +1,3 @@
-// Copyright (c) 2024 Leon Hwang
-//
-// This software is released under the MIT License.
-// https://opensource.org/licenses/MIT
-
 package main
 
 import (
@@ -22,7 +17,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-//go:generate bpf2go -cc clang traceroute ../xdp-traceroute/traceroute.c -- -D__TARGET_ARCH_x86 -I../headers -Wall -mcpu=v3
+//go:generate bpf2go -cc clang traceroute ./traceroute.c -- -D__TARGET_ARCH_x86 -I../headers -Wall -mcpu=v3
 
 const (
 	bpffsPath     = "./test-bpffs-dir"

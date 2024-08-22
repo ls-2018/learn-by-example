@@ -55,22 +55,22 @@ EOF
 	apt-get install -y linux-tools-generic
 
 	# 源码编译
-	#  apt install -y zip bison build-essential cmake flex git libedit-dev \
-	#    libllvm14 llvm-14-dev libclang-14-dev python3 zlib1g-dev libelf-dev libfl-dev python3-setuptools \
-	#    liblzma-dev libdebuginfod-dev arping netperf iperf
-	# export https_proxy=http://192.168.31.50:7890 http_proxy=http://192.168.31.50:7890 all_proxy=socks5://192.168.31.50:7890
-	# export https_proxy=http://10.230.205.190:7890 http_proxy=http://10.230.205.190:7890 all_proxy=socks5://10.230.205.190:7890
-	# git clone https://github.com/iovisor/bcc.git
-	# mkdir bcc/build; cd bcc/build
-	# cmake ..
-	# unset https_proxy && unset http_proxy && unset all_proxy
-	# make -j 16
-	# sudo make install
-	# cmake -DPYTHON_CMD=python3 .. # build python3 binding
-	# pushd src/python/
-	# make -j 16
-	# sudo make install
-	# popd
+apt install -y zip bison build-essential cmake flex git libedit-dev \
+  libllvm14 llvm-14-dev libclang-14-dev python3 zlib1g-dev libelf-dev libfl-dev python3-setuptools \
+  liblzma-dev libdebuginfod-dev arping netperf iperf
+export https_proxy=http://192.168.31.50:7890 http_proxy=http://192.168.31.50:7890 all_proxy=socks5://192.168.31.50:7890
+#export https_proxy=http://10.230.205.190:7890 http_proxy=http://10.230.205.190:7890 all_proxy=socks5://10.230.205.190:7890
+git clone https://github.com/iovisor/bcc.git
+mkdir bcc/build; cd bcc/build
+cmake ..
+unset https_proxy && unset http_proxy && unset all_proxy
+make -j 16
+sudo make install
+cmake -DPYTHON_CMD=python3 .. # build python3 binding
+pushd src/python/
+make -j 16
+sudo make install
+popd
 
 	# # 测试
 	# /usr/share/bcc/tools/biolatency
