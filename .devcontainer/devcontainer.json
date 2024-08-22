@@ -12,6 +12,9 @@
   "postAttachCommand": {
     "Runs all non-integration tests that do not require `root` privileges": "sleep 2",
   },
+  containerEnv: {
+    "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/root/.eunomia/bin:/usr/share/bcc/tools:/usr/lib/llvm-14/bin:/usr/local/go1.22.0/bin"
+  },
   "remoteUser": "root",
   "runArgs": [
     "--ipc=host",

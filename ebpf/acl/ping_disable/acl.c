@@ -1,7 +1,7 @@
 #include "vmlinux.h"
 #include "bpf_helpers.h"
 
-char license[] SEC("license") = "GPL";
+char LICENSE[] SEC("license") = "GPL";
 
 struct rule_struct {
     __u64 key;

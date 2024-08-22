@@ -17,3 +17,4 @@
 *.log
 .idea
 vendor
+cmake-build-debug

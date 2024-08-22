@@ -6,3 +6,4 @@ Makefile
 CMakeLists.txt
 ebpf
 .clang-format
+cmake-build-debug

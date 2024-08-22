@@ -1,2 +1,0 @@
-/usr/bin/ar qc libtest.a CMakeFiles/test.dir/ebpf/acl/acl.c.o
-/usr/bin/ranlib libtest.a

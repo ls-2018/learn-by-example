@@ -1,12 +1,13 @@
 CLANG := clang
-CLANG_INCLUDE := -I../../headers
+CLANG_INCLUDE := -I../../../headers
 
 EBPF_SOURCE := ./acl.c
 EBPF_BINARY := iptables-ebpf-acl.elf
 EBPF_PINNED := /sys/fs/bpf/ipt_acl
 
 GO := go
-GOBUILD := $(GO) build -v -trimpath
+#GOBUILD := $(GO) build -v -trimpath
+GOBUILD := $(GO) build
 
 GO_SOURCE := main.go
 GO_BINARY := iptables-ebpf-acl

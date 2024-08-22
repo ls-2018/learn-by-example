@@ -1,25 +1,12 @@
 ```
-[root@aps04 ~]# perf list tracepoint |grep sys_enter_write
-syscalls:sys_enter_write                           [Tracepoint event]
-syscalls:sys_enter_writev                          [Tracepoint event]
+nm /bin/bash 
 
 
-
-root@ubuntu-linux-22-04-desktop:~# cat /sys/kernel/debug/tracing/available_filter_functions | wc -l
-60765
-
-
-
-4.1 摆脱内核头文件依赖
-内核 BTF 信息除了用来做字段重定位之外，还可以用来生成一个大的头文件（"vmlinux.h"），
-这个头文件中**包含了所有的内部内核类型，从而避免了依赖系统层面的内核头文件**。
+perf list tracepoint |grep sys_enter_write
+cat /sys/kernel/debug/tracing/available_filter_functions | wc -l
 bpftool btf dump file /sys/kernel/btf/vmlinux format c > include/vmlinux.h
-<!--  只需要 #include "vmlinux.h"，**也不用再安装 kernel-devel -->
 
 ```
-- uprobe            挂载在函数进入之前,可以获取到函数的参数值
-- uretprobe         挂载在函数返回值之后,可以获取到函数的返回值
-- nm /bin/bash   查看一个程序的符号表
 
 xdp 入流量
 tc  入出流量
@@ -49,8 +36,8 @@ arping -I etho0 192.168.0.3
 
 arp 欺骗，metallb
 
-
-
+- bpf_skb_load_bytes_relative
+- 
 - bpf_map_lookup_elem
 - bpf_map_update_elem
 - bpf_map_delete_elem
