@@ -138,7 +138,7 @@ func runXDPTraceroute() {
 
 	log.Printf("traceroute is running on %s\n", flags.device)
 
-	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM, syscall.SIGTSTP)
 	defer cancel()
 
 	<-ctx.Done()

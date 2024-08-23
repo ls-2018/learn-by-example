@@ -1,6 +1,6 @@
 module github.com/Asphaltt/go-nfnetlink-example
 
-go 1.22.0
+go 1.21.0
 
 require (
 	github.com/asavie/xdp v0.3.3

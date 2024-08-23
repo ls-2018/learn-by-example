@@ -120,7 +120,7 @@ static __always_inline int __encode_icmp_packet(struct xdp_md *ctx, struct ethhd
     icmph->code = ICMP_EXC_TTL;
     icmph->un.gateway = 0;
     __update_icmp_checksum(icmph, sizeof(*icmph) + icmp_payload);
-
+    bpf_printk("--------------");
     return XDP_TX;
 }
 

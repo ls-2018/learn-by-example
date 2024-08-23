@@ -32,6 +32,10 @@ Flags:
 ```bash
 # ./xdp-traceroute --dev enp0s5
 2023/12/17 06:20:36 traceroute is running on enp0s1
+
+
+# 另一台机器
+traceroute vm
 ```
 
 ![xdp-traceroute](./xdp-traceroute-wireshark.png)
