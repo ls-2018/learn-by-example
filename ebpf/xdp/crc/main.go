@@ -13,10 +13,9 @@ import (
 	"github.com/cilium/ebpf/link"
 	"github.com/cilium/ebpf/rlimit"
 	flag "github.com/spf13/pflag"
-	"github.com/vishvananda/netlink"
 )
 
-//go:generate bpf2go -cc clang xdp ./xdp.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
+//go:generate bpf2go -cc clang xdp ./xdp.c -- -D__TARGET_ARCH_x86 -I../../headers -Wall
 
 func main() {
 	var device string
