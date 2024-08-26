@@ -21,8 +21,8 @@ struct {
 __be32 filter_daddr;
 __be16 filter_dport;
 
-static volatile const __u32 filter_pid = 0;
-static volatile const __u32 filter_syscall_id = 0;
+static volatile const __attribute__((unused)) __u32 filter_pid = 0;
+static volatile const __attribute__((unused)) __u32 filter_syscall_id = 0;
 
 static __always_inline void handle_new_connection(void *ctx, struct sock *sk) {
     event_t ev = {};

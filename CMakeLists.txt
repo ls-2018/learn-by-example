@@ -10,6 +10,7 @@ include_directories(
 # 无用
 add_library(
         test
-        ebpf/acl/acl.c
+        ebpf/acl/ping_disable/acl.c
         headers/vmlinux.h
+        ebpf/xdp/xdpping/xdp_ping.c
 )

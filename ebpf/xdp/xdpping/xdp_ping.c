@@ -2,6 +2,8 @@
 
 #include "bpf_all.h"
 
+#define CSUM_SIZE 64
+
 SEC("xdp")
 int xdp_ping(struct xdp_md *ctx) {
     void *data = ctx_ptr(ctx, data);
@@ -23,7 +25,6 @@ int xdp_ping(struct xdp_md *ctx) {
     if (iph->protocol != IPPROTO_ICMP)
         return XDP_PASS;
 
-#define CSUM_SIZE 64
     int csum_size = CSUM_SIZE;
 
     struct icmphdr *icmph;
@@ -38,12 +39,12 @@ int xdp_ping(struct xdp_md *ctx) {
     // FAILED: int csum_size = iph->tot_len - sizeof(*iph); // R3 offset is outside of the packet
     // FAILED: int csum_size = data_end - (void *)icmph;    // R4 unbounded memory access, use 'var &= const' or 'if (var < const)'
 
-    // correct icmp hdr
+    // 正确的 icmp hdr
     icmph->type = ICMP_ECHOREPLY;
     icmph->checksum = 0; // Note: reset and then checksum
     icmph->checksum = ipv4_csum(icmph, csum_size);
 
-    // correct ip hdr
+    // 正确的 ip hdr
     __be32 daddr = iph->daddr;
     iph->daddr = iph->saddr;
     iph->saddr = daddr;

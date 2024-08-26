@@ -19,7 +19,7 @@ static const __u16 crc16tab[256] = {0x0000, 0x1021, 0x2042, 0x3063, 0x4084, 0x50
 // 满足编程语言的要求
 #define __sink(expr) asm volatile("" : "+g"(expr))
 
-static __noinline __u32 __crc(__u32 crc, __u64 port, int i) {
+static __noinline __attribute__((unused)) __u32 __crc(__u32 crc, __u64 port, int i) {
     return (crc << 8) ^ crc16tab[((crc >> 8) ^ (port >> i * 8)) & 0xff];
 }
 
