@@ -1,8 +1,3 @@
-/**
- * Copyright 2024 Leon Hwang.
- * SPDX-License-Identifier: MIT
- */
-
 //go:build ignore
 
 #include "bpf_all.h"

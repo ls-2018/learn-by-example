@@ -30,7 +30,7 @@ import (
 	"golang.org/x/sys/unix"
 )
 
-//go:generate bpf2go -cc clang fftc ./tc.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
+//go:generate bpf2go -cc clang fftc ./tc.c -- -D__TARGET_ARCH_x86 -I../../headers -Wall
 
 func main() {
 	var device string

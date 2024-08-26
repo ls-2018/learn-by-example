@@ -24,7 +24,7 @@ import (
 	"github.com/vishvananda/netlink"
 )
 
-//go:generate bpf2go -cc clang xdp ./xdp.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
+//go:generate bpf2go -cc clang xdp ./xdp.c -- -D__TARGET_ARCH_x86 -I../../../headers -Wall
 
 type CPUVal struct {
 	Qsize uint32
@@ -45,7 +45,7 @@ func main() {
 		log.Fatalf("Failed to remove rlimit memlock: %v", err)
 	}
 
-	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM, syscall.SIGTSTP)
 	defer stop()
 
 	spec, err := loadXdp()
@@ -97,7 +97,12 @@ func main() {
 	go handlePerfEvent(ctx, obj.Events)
 
 	<-ctx.Done()
+
 }
+
+// XDPGenericMode: 	(SKB)链接XDP BPF程序，用于尚未支持本机XDP的驱动程序。
+// XDPDriverMode:	链接XDP BPF程序到驱动程序的接收路径。
+// XDPOffloadMode:	将整个XDP BPF程序卸载到硬件。
 
 func handlePerfEvent(ctx context.Context, events *ebpf.Map) {
 	eventReader, err := perf.NewReader(events, 4096)
@@ -125,7 +130,6 @@ func handlePerfEvent(ctx context.Context, events *ebpf.Map) {
 			if errors.Is(err, perf.ErrClosed) {
 				return
 			}
-
 			log.Printf("Reading perf-event: %v", err)
 		}
 
@@ -137,13 +141,9 @@ func handlePerfEvent(ctx context.Context, events *ebpf.Map) {
 
 		switch ev.ProbeType {
 		default:
-			log.Printf("Tracing packet: %s -> %s on CPU:%d (native)",
-				netip.AddrFrom4(ev.Saddr),
-				netip.AddrFrom4(ev.Daddr), ev.Verdict)
+			log.Printf("Tracing packet: %s -> %s on CPU:%d (native)", netip.AddrFrom4(ev.Saddr), netip.AddrFrom4(ev.Daddr), ev.Verdict)
 		case 1:
-			log.Printf("Tracing packet: %s -> %s on CPU:%d (cpumap)",
-				netip.AddrFrom4(ev.Saddr),
-				netip.AddrFrom4(ev.Daddr), ev.Verdict)
+			log.Printf("Tracing packet: %s -> %s on CPU:%d (cpumap)", netip.AddrFrom4(ev.Saddr), netip.AddrFrom4(ev.Daddr), ev.Verdict)
 		}
 
 		select {

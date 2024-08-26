@@ -100,7 +100,8 @@
 │   ├── timer
 │   ├── tracepoint
 │   ├── xdp-cpumap
-│   ├── xdp-crc
+│   ├── xdp
+│   │   └── crc                 # 寄存器过度优化导致的问题
 │   ├── xdp-traceroute-bpffs
 │   ├── xdpmetadata
 │   │   └── scripts

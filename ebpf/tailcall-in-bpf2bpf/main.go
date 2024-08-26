@@ -15,7 +15,7 @@ import (
 	flag "github.com/spf13/pflag"
 )
 
-//go:generate bpf2go -cc clang tailcall ./tailcall.c -- -D__TARGET_ARCH_x86 -I../headers -Wall -g
+//go:generate bpf2go -cc clang tailcall ./tailcall.c -- -D__TARGET_ARCH_x86 -I../../headers -Wall -g
 
 var flags struct {
 	device string

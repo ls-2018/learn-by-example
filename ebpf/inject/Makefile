@@ -1,5 +1,5 @@
 CLANG := clang
-CLANG_INCLUDE := -I../headers
+CLANG_INCLUDE := -I../../headers
 
 EBPF_SOURCE_INJECT_GLOBAL_VAR := ./ebpf/inject_global_var.c
 EBPF_BINARY_INJECT_GLOBAL_VAR := ./cmd/ebpf-inject-global-var/ebpf-inject-global-var.elf

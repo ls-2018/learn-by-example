@@ -18,7 +18,7 @@ import (
 	flag "github.com/spf13/pflag"
 )
 
-//go:generate bpf2go -cc clang tcpconn ./ebpf/tcp-connecting.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
+//go:generate bpf2go -cc clang tcpconn ./ebpf/tcp-connecting.c -- -D__TARGET_ARCH_x86 -I../../headers -Wall
 
 func main() {
 	var noTailcall bool

@@ -30,8 +30,8 @@ import (
 	"golang.org/x/sys/unix"
 )
 
-//go:generate bpf2go -cc clang tp ./tracepoint.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
-//go:generate bpf2go -cc clang ff ./fentry_fexit.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
+//go:generate bpf2go -cc clang tp ./tracepoint.c -- -D__TARGET_ARCH_x86 -I../../headers -Wall
+//go:generate bpf2go -cc clang ff ./fentry_fexit.c -- -D__TARGET_ARCH_x86 -I../../headers -Wall
 
 func main() {
 	if err := rlimit.RemoveMemlock(); err != nil {

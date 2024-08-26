@@ -18,8 +18,8 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
-//go:generate bpf2go -cc clang tcpconn ./tcp-connecting.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
-//go:generate bpf2go -cc clang freplace ./freplace.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
+//go:generate bpf2go -cc clang tcpconn ./tcp-connecting.c -- -D__TARGET_ARCH_x86 -I../../headers -Wall
+//go:generate bpf2go -cc clang freplace ./freplace.c -- -D__TARGET_ARCH_x86 -I../../headers -Wall
 
 func main() {
 	if err := rlimit.RemoveMemlock(); err != nil {

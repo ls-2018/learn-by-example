@@ -17,7 +17,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-//go:generate bpf2go -cc clang traceroute ./traceroute.c -- -D__TARGET_ARCH_x86 -I../headers -Wall -mcpu=v3
+//go:generate bpf2go -cc clang traceroute ./traceroute.c -- -D__TARGET_ARCH_x86 -I../../../headers -Wall -mcpu=v3
 
 const (
 	bpffsPath     = "./test-bpffs-dir"
@@ -138,7 +138,7 @@ func runXDPTraceroute() {
 
 	log.Printf("traceroute is running on %s\n", flags.device)
 
-	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM, syscall.SIGTSTP)
+	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM, syscall.SIGTSTP, syscall.SIGTSTP)
 	defer cancel()
 
 	<-ctx.Done()

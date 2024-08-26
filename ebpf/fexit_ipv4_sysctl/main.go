@@ -23,7 +23,7 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
-//go:generate bpf2go -cc clang sysctl ./sysctl.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
+//go:generate bpf2go -cc clang sysctl ./sysctl.c -- -D__TARGET_ARCH_x86 -I../../headers -Wall
 
 func main() {
 	if err := rlimit.RemoveMemlock(); err != nil {

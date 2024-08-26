@@ -22,9 +22,9 @@ import (
 	"github.com/cilium/ebpf/rlimit"
 )
 
-//go:generate bpf2go -no-global-types -cc clang tcpconn ./tcp-connecting.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
-//go:generate bpf2go -no-global-types -cc clang freplace ./freplace.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
-//go:generate bpf2go -no-global-types -cc clang ff ./fentry_fexit.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
+//go:generate bpf2go -no-global-types -cc clang tcpconn ./tcp-connecting.c -- -D__TARGET_ARCH_x86 -I../../headers -Wall
+//go:generate bpf2go -no-global-types -cc clang freplace ./freplace.c -- -D__TARGET_ARCH_x86 -I../../headers -Wall
+//go:generate bpf2go -no-global-types -cc clang ff ./fentry_fexit.c -- -D__TARGET_ARCH_x86 -I../../headers -Wall
 
 func main() {
 	if err := rlimit.RemoveMemlock(); err != nil {

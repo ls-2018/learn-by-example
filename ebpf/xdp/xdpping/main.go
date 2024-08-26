@@ -1,11 +1,13 @@
 package main
 
 import (
+	"errors"
 	"log"
 	"net"
 	"os"
 	"path/filepath"
 
+	"github.com/cilium/ebpf"
 	"github.com/cilium/ebpf/link"
 	"github.com/iovisor/gobpf/pkg/bpffs"
 	"github.com/spf13/cobra"
@@ -13,8 +15,7 @@ import (
 
 const bpffsPath = "bpffs"
 
-//go:generate bpf2go -cc clang xdptailcall ./xdp_tailcall.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
-//go:generate bpf2go -cc clang tcmd ./tc_metadata.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
+//go:generate bpf2go -cc clang xdpping ./xdp_ping.c -- -D__TARGET_ARCH_x86 -I../../../headers -Wall
 
 var flags struct {
 	device string
@@ -26,50 +27,54 @@ var rootCmd = cobra.Command{
 
 func init() {
 	rootCmd.Run = func(cmd *cobra.Command, args []string) {
-		runXDPtailcall()
+		runXDPPing()
 	}
 
 	flag := rootCmd.PersistentFlags()
 	flag.StringVar(&flags.device, "dev", "", "device to run XDP")
 }
 
-func runXDPtailcall() {
+func runXDPPing() {
 	ifiDev, err := net.InterfaceByName(flags.device)
 	if err != nil {
 		log.Fatalf("Failed to fetch device info of %s: %v", flags.device, err)
 	}
 
-	var obj xdptailcallObjects
-	if err := loadXdptailcallObjects(&obj, nil); err != nil {
-		log.Fatalf("Failed to load xdp_tailcall bpf obj: %v", err)
+	devPinPath := filepath.Join(bpffsPath, flags.device)
+	removePinnedXDP(devPinPath)
+
+	var obj xdppingObjects
+	if err := loadXdppingObjects(&obj, nil); err != nil {
+		var ve *ebpf.VerifierError
+		if errors.As(err, &ve) {
+			log.Fatalf("Failed to load xdpping bpf obj: %v\n%+v", err, ve)
+		}
+		log.Fatalf("Failed to load xdpping bpf obj: %v", err)
 	}
 	defer obj.Close()
 
-	if err := obj.XdpProgs.Put(uint32(0), obj.XdpFn); err != nil {
-		log.Fatalf("Failed to save xdp_fn to xdp_progs: %v", err)
-	}
-
-	mapPinPath := filepath.Join(bpffsPath, "xdp_progs")
-	if err := obj.XdpProgs.Pin(mapPinPath); err != nil {
-		log.Fatalf("Failed to pin xdp_pros to %s: %v", "xdp_progs", err)
-	}
-
 	xdp, err := link.AttachXDP(link.XDPOptions{
-		Program:   obj.XdpTailcall,
+		Program:   obj.XdpPing,
 		Interface: ifiDev.Index,
 		Flags:     link.XDPGenericMode,
 	})
 	if err != nil {
-		log.Fatalf("Failed to attach xdp_tailcall to %s: %v", flags.device, err)
+		log.Fatalf("Failed to attach xdpping to %s: %v", flags.device, err)
 	}
 	defer xdp.Close()
-
-	devPinPath := filepath.Join(bpffsPath, flags.device)
 	if err := xdp.Pin(devPinPath); err != nil {
-		log.Fatalf("Failed to pin xdp_tailcall to %s: %v", flags.device, err)
+		log.Fatalf("Failed to pin xdpping to %s: %v", flags.device, err)
 	}
 
-	log.Printf("xdp_tailcall is running on %s\n", flags.device)
+	log.Printf("xdpping is running on %s\n", flags.device)
+}
+
+func removePinnedXDP(devPinPath string) {
+	xdp, err := link.LoadPinnedLink(devPinPath, nil)
+	if err == nil {
+		_ = xdp.Unpin()
+		_ = xdp.Close()
+	}
 }
 
 func checkBpffs() {

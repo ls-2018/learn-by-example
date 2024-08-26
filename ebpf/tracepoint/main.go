@@ -28,14 +28,14 @@ import (
 	"golang.org/x/sys/unix"
 )
 
-//go:generate bpf2go -cc clang tp ./tracepoint.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
+//go:generate bpf2go -cc clang tp ./tracepoint.c -- -D__TARGET_ARCH_x86 -I../../headers -Wall
 
 func main() {
 	if err := rlimit.RemoveMemlock(); err != nil {
 		log.Fatalf("Failed to remove rlimit memlock: %v", err)
 	}
 
-	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM, syscall.SIGTSTP)
 	defer stop()
 
 	var obj tpObjects

@@ -19,7 +19,7 @@ import (
 	"github.com/vishvananda/netlink"
 )
 
-//go:generate bpf2go -no-global-types -cc clang xdpfn ./xdp.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
+//go:generate bpf2go -no-global-types -cc clang xdpfn ./xdp.c -- -D__TARGET_ARCH_x86 -I../../headers -Wall
 
 func main() {
 	var dev string
@@ -70,7 +70,7 @@ func main() {
 		defer link.Close()
 	}
 
-	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGTERM, os.Interrupt)
+	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGTERM, syscall.SIGTSTP, os.Interrupt)
 	defer stop()
 
 	var nHandling int

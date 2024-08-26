@@ -9,7 +9,7 @@ clean:
 rebuild: clean build
 
 build:
-	clang -I../headers -O2 -g -target bpf -c iptables-bpf.c -o iptables-bpf.elf
+	clang -I../../headers -O2 -g -target bpf -c iptables-bpf.c -o iptables-bpf.elf
 	go build -v -o iptables-bpf main.go
 
 setup: build

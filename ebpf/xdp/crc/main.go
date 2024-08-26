@@ -5,6 +5,7 @@ package main
 
 import (
 	"context"
+	"github.com/vishvananda/netlink"
 	"log"
 	"os"
 	"os/signal"
@@ -15,7 +16,7 @@ import (
 	flag "github.com/spf13/pflag"
 )
 
-//go:generate bpf2go -cc clang xdp ./xdp.c -- -D__TARGET_ARCH_x86 -I../../headers -Wall
+//go:generate bpf2go -cc clang xdp ./xdp.c -- -D__TARGET_ARCH_x86 -I../../../headers -Wall
 
 func main() {
 	var device string
