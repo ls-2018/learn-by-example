@@ -160,7 +160,8 @@ func main() {
 
 	if !withoutTracing {
 		if link, err := link.AttachTracing(link.TracingOptions{
-			Program: obj.FentryTc,
+			Program:    obj.FentryTc,
+			AttachType: ebpf.AttachCGroupInetIngress,
 		}); err != nil {
 			log.Printf("Failed to attach fentry(tc): %v", err)
 			return
@@ -171,7 +172,8 @@ func main() {
 
 		// attach fexit(tc) to the device
 		if link, err := link.AttachTracing(link.TracingOptions{
-			Program: obj.FexitTc,
+			Program:    obj.FexitTc,
+			AttachType: ebpf.AttachCGroupInetIngress,
 		}); err != nil {
 			log.Printf("Failed to attach fexit(tc): %v", err)
 			return
