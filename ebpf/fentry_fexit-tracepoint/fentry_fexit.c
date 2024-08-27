@@ -14,22 +14,20 @@ struct netlink_extack_error_ctx {
 
     /*
      * bpf does not support tracepoint __data_loc directly.
-     *
-     * Actually, this field is a 32 bit integer whose value encodes
-     * information on where to find the actual data. The first 2 bytes is
-     * the size of the data. The last 2 bytes is the offset from the start
-     * of the tracepoint struct where the data begins.
+     * 实际上，这个字段是一个32位整数，它的值编码了在哪里可以找到实际数据的信息。前2个字节是数据的大小。最后2个字节是从数据开始的跟踪点结构开始的偏移量。
      * -- https://github.com/iovisor/bpftrace/pull/1542
      */
     __u32 msg; // __data_loc char[] msg;
 };
+
+//cat /sys/kernel/debug/tracing/events/netlink/netlink_extack/format
 
 SEC("fentry/netlink_extack")
 int BPF_PROG(fentry_netlink_extack, struct netlink_extack_error_ctx *nl_ctx) {
     bpf_printk("tcpconn, fentry_netlink_extack\n");
 
     /*
-     * BPF_CORE_READ() is not dedicated to user-defined struct.
+     * BPF_CORE_READ() is not dedicated/专用 to user-defined struct.
      */
 
     __u32 msg;

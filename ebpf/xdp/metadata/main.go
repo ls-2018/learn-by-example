@@ -2,14 +2,15 @@ package main
 
 import (
 	"github.com/cilium/ebpf"
+	"github.com/cilium/ebpf/link"
+	"github.com/cilium/ebpf/rlimit"
+	"github.com/iovisor/gobpf/pkg/bpffs"
+	"github.com/spf13/cobra"
+	"github.com/vishvananda/netlink"
 	"log"
 	"net"
 	"os"
 	"path/filepath"
-
-	"github.com/cilium/ebpf/link"
-	"github.com/iovisor/gobpf/pkg/bpffs"
-	"github.com/spf13/cobra"
 )
 
 const bpffsPath = "bpffs"
@@ -35,11 +36,14 @@ func init() {
 }
 
 func runXDPtailcall() {
+	if err := rlimit.RemoveMemlock(); err != nil {
+		log.Fatalf("Failed to remove rlimit memlock: %v", err)
+	}
+
 	ifiDev, err := net.InterfaceByName(flags.device)
 	if err != nil {
 		log.Fatalf("Failed to fetch device info of %s: %v", flags.device, err)
 	}
-
 	var obj xdptailcallObjects
 	if err := loadXdptailcallObjects(&obj, nil); err != nil {
 		log.Fatalf("Failed to load xdp_tailcall bpf obj: %v", err)
@@ -73,14 +77,19 @@ func runXDPtailcall() {
 	log.Printf("xdp_tailcall is running on %s\n", flags.device)
 
 	var _obj tcmdObjects
-	if err := loadXdptailcallObjects(&_obj, nil); err != nil {
+	if err := loadTcmdObjects(&_obj, nil); err != nil {
 		log.Fatalf("Failed to load xdp_tailcall bpf obj: %v", err)
 	}
 	defer _obj.Close()
 
+	ifi, err := netlink.LinkByName(flags.device)
+	if err != nil {
+		log.Fatalf("Failed to fetch link info of %s: %v", flags.device, err)
+	}
+
 	_tc, err := link.AttachTCX(link.TCXOptions{
+		Interface: ifi.Attrs().Index,
 		Program:   _obj.TcMetadata,
-		Interface: ifiDev.Index,
 		Attach:    ebpf.AttachTCXIngress,
 	})
 	if err != nil {
