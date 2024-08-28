@@ -68,11 +68,10 @@
 │   ├── fentry_fexit-xdp
 │   ├── fexit_ipv4_sysctl
 │   ├── fexit_rpsxps
-│   ├── freplace
+│   ├── freplace                    # 替换某个函数
 │   ├── global-variable
 │   ├── headers
 │   ├── inject
-│   │   ├── README.assets
 │   │   ├── cmd
 │   │   │   ├── ebpf-inject-global-var
 │   │   │   └── ebpf-inject-replace-const
@@ -80,7 +79,6 @@
 │   ├── iptables-bpf
 │   ├── iptables-trace
 │   │   ├── ebpf
-│   │   │   └── headers
 │   │   └── kernel
 │   ├── iter
 │   ├── kernel-module-fun

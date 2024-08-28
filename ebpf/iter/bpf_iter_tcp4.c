@@ -169,6 +169,15 @@ int dump_tcp4(struct bpf_iter__tcp *ctx) {
 
     seq_num = ctx->meta->seq_num;
     if (seq_num == 0)
+    {
+//    root@VM-20-14-ubuntu:~# cat /sys/fs/bpf/itertcp4
+//        sl  local_address rem_address   st tx_queue rx_queue tr tm->when retrnsmt   uid  timeout inode
+//         0: 3600007F:0035 00000000:0000 0A 00000000:00000000 00:00000000 00000000   992        0 6838 2 ffff8bd5c5af9bc0 400 0 0 10 5
+//         1: 3500007F:0035 00000000:0000 0A 00000000:00000000 00:00000000 00000000   992        0 6836 2 ffff8bd5c5afb780 400 0 0 10 5
+//         4: 0E14010A:DE98 3700FEA9:1F90 06 00000000:00000000 03:00000000 00000000     0        0 0 4 ffff8bd5c303ad68
+//         5: 0E14010A:DE34 3700FEA9:15C6 01 00000000:00000000 00:00000000 00000000     0        0 12285 2 ffff8bd5c26ed340 85 16 30 10 -1
+//         6: 0E14010A:DE44 3700FEA9:15C6 01 00000000:00000000 00:00000000 00000000     0        0 12286 2 ffff8bd5c26e8000 81 0 0 10 -1
+//         8: 0E14010A:D018 8A00FEA9:1FFA 01 00000000:00000000 00:00000000 00000000     0        0 8982 2 ffff8bd5c5afe5c0 83 16 30 10 -1
         BPF_SEQ_PRINTF(
             seq,
             "  sl  "
@@ -176,6 +185,7 @@ int dump_tcp4(struct bpf_iter__tcp *ctx) {
             "rem_address   "
             "st tx_queue rx_queue tr tm->when retrnsmt"
             "   uid  timeout inode\n");
+    }
 
     if (sk_common->skc_family != AF_INET)
         return 0;

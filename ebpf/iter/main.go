@@ -32,7 +32,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to load bpf spec: %v", err)
 	}
-
+	// 内核 5.5
 	if err := spec.RewriteConstants(map[string]interface{}{
 		"CONFIG_HZ": hz,
 	}); err != nil {
