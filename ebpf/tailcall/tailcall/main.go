@@ -18,7 +18,7 @@ import (
 	flag "github.com/spf13/pflag"
 )
 
-//go:generate bpf2go -cc clang tcpconn ./ebpf/tcp-connecting.c -- -D__TARGET_ARCH_x86 -I../../headers -Wall
+//go:generate bpf2go -cc clang tcpconn ./tcp-connecting.c -- -D__TARGET_ARCH_x86 -I../../../headers -Wall
 
 func main() {
 	var noTailcall bool
@@ -58,13 +58,13 @@ func main() {
 		log.Printf("Attached kprobe(tcp_connect)")
 	}
 
-	if kp, err := link.Kprobe("inet_csk_complete_hashdance", obj.K_icskCompleteHashdance, nil); err != nil {
-		log.Printf("Failed to attach kprobe(inet_csk_complete_hashdance): %v", err)
-		return
-	} else {
-		defer kp.Close()
-		log.Printf("Attached kprobe(inet_csk_complete_hashdance)")
-	}
+// 	if kp, err := link.Kprobe("inet_csk_complete_hashdance", obj.K_icskCompleteHashdance, nil); err != nil {
+// 		log.Printf("Failed to attach kprobe(inet_csk_complete_hashdance): %v", err)
+// 		return
+// 	} else {
+// 		defer kp.Close()
+// 		log.Printf("Attached kprobe(inet_csk_complete_hashdance)")
+// 	}
 
 	go handlePerfEvent(ctx, obj.Events)
 
@@ -105,9 +105,7 @@ func handlePerfEvent(ctx context.Context, events *ebpf.Map) {
 
 		binary.Read(bytes.NewBuffer(event.RawSample), binary.LittleEndian, &ev)
 
-		log.Printf("new tcp connection: %s:%d -> %s:%d",
-			netip.AddrFrom4(ev.Saddr), ev.Sport,
-			netip.AddrFrom4(ev.Daddr), ev.Dport)
+		log.Printf("new tcp connection: %s:%d -> %s:%d", netip.AddrFrom4(ev.Saddr), ev.Sport, netip.AddrFrom4(ev.Daddr), ev.Dport)
 
 		select {
 		case <-ctx.Done():

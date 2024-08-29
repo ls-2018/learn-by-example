@@ -49,7 +49,7 @@ arp 欺骗，metallb
 - bpf_get_smp_processor_id # 返回当前 CPU 的 ID
 - bpf_get_numa_node_id # cat /boot/config-$(uname -r) | grep CONFIG_USE_PERCPU_NUMA_NODE_ID
 
-- bpf_tail_call_static
+- bpf_tail_call_static(ctx, &progs, 0);   尾调用,后面的代码不执行
 - bpf_skc_lookup_tcp
 
 

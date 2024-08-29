@@ -1,3 +1,5 @@
+#include "vmlinux.h"
+#include "bpf_tracing.h"
 // 用于暂存到map的struct
 struct temp_key_t {
     u32 tgid;
@@ -10,6 +12,8 @@ struct temp_value_t {
     u64 kernel_stack_id; // 当前 PID 的内核态栈信息的 ID 值。
     u8 comm[16];         // PID 的名称。
 };
+
+const u32 listen_tgid;
 
 struct {
     __uint(type, BPF_MAP_TYPE_HASH);
@@ -25,7 +29,7 @@ inline void try_record_start(void *ctx, u32 prev_pid, u32 prev_tgid) {
     }
     // TODO
 }
-
+// kernel trace点: trace_函数名
 SEC("tp_btf/sched_switch")
 int BPF_PROG(sched_switch, bool preempt, struct task_struct *prev, struct task_struct *next) {
     pid_t prev_pid = prev->pid;
