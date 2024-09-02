@@ -21,9 +21,9 @@ import (
 	flag "github.com/spf13/pflag"
 )
 
-//go:generate bpf2go -cc clang tcpconn1 ./tcp-connecting.c -- -D__TARGET_ARCH_x86 -I../../headers -Wall
-//go:generate bpf2go -cc clang tcpconn2 ./tcp-connecting.c -- -D__TARGET_ARCH_x86 -I../../headers -Wall
-//go:generate bpf2go -cc clang xdp ./xdp.c -- -D__TARGET_ARCH_x86 -I../../headers -Wall
+//go:generate bpf2go -cc clang tcpconn1 ./tcp-connecting.c -- -D__TARGET_ARCH_x86 -I../../../headers -Wall
+//go:generate bpf2go -cc clang tcpconn2 ./tcp-connecting.c -- -D__TARGET_ARCH_x86 -I../../../headers -Wall
+//go:generate bpf2go -cc clang xdp ./xdp.c -- -D__TARGET_ARCH_x86 -I../../../headers -Wall
 
 const (
 	progArrayMapPinPath = "/sys/fs/bpf/tailcall-shared_progs"

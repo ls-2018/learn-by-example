@@ -1,4 +1,5 @@
 #include "iptables_trace.h"
+#include "bpf_tracing.h"
 #include "bpf_kprobe_args.h"
 #include "maps.bpf.h"
 

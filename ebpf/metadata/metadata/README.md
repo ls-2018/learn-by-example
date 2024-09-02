@@ -6,7 +6,7 @@
 
 XDP metadata 既可以在 XDP 程序内部使用，也可以在 XDP 和 `tc-bpf` 之间使用。如下图：
 
-![metadata between XDP and tc-bpf](./XDP%20metadata.jpg)
+![metadata between XDP and tc-bpf](XDP metadata.jpg)
 
 1. 在 XDP 主程序里，调整 metadata，并写入一个数字。
 2. 在 XDP 子程序里，取出 metadata，并检查其中的数字。
@@ -110,7 +110,7 @@ ip netns exec nscli ping -c1 192.168.0.11
           <idle>-0       [002] d.s.. 88592.039119: bpf_trace_printk: tc metadata
 ```
 
-实验使用的环境配置脚本：[setup-veth.sh](./scripts/setup-netns.sh)。
+实验使用的环境配置脚本：[setup-veth.sh](scripts/setup-netns.sh)。
 
 ## metadata 详解
 
@@ -124,7 +124,7 @@ metadata 到底保存在哪里呢？
 
 metadata 保存在 skb buffer 里。复习一下 [How SKB works](http://vger.kernel.org/~davem/skb_data.html)。
 
-![skb layout](./skb_layout.png)
+![skb layout](skb_layout.png)
 
 如上图，metadata 保存在 headroom 里紧挨着 packet data 的那几个字节里，下面是 `bpf_xdp_adjust_meta()` 的源代码片段：
 
@@ -177,7 +177,7 @@ do_xdp_generic()
 
 因此，`bpf_xdp_adjust_meta(ctx, -4)` 就是将 `data_meta` 从 `data` 向 headroom 里挪 4 个字节，如下图。
 
-![XDP layout](./XDP%20layout.png)
+![XDP layout](XDP layout.png)
 
 ### metadata 是如何从 XDP 传递到 `tc-bpf` 的呢？
 

@@ -4,7 +4,7 @@
 /ebpf/tailcall/tcpconn_*
 /ebpf/global-variable/tcpconn_*
 /ebpf/xdpmetadata/xdpmetadata
-/ebpf/metadata_xdp2afxdp/metadata_xdp2afxdp
+/ebpf/metadata/metadata_xdp2afxdp/metadata_xdp2afxdp
 /ebpf/fentry_fexit-bpf2bpf/fentry_fexit-bpf2bpf
 /ebpf/fentry_fexit-tailcall/fentry_fexit-tailcall
 /ebpf/fentry_fexit-freplace/fentry_fexit-freplace

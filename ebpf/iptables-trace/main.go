@@ -18,7 +18,7 @@ import (
 	"golang.org/x/sys/unix"
 )
 
-//go:generate bpf2go -no-global-types -cc clang iptablestrace ./ebpf/iptables-trace.c -- -D__TARGET_ARCH_x86 -I./ebpf/headers -Wall
+//go:generate bpf2go -no-global-types -cc clang iptablestrace ./ebpf/iptables-trace.c -- -D__TARGET_ARCH_x86 -I../../headers -Wall
 
 var usage = `examples:
 iptables-trace                                      # trace all packets

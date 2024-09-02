@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/binary"
 	"errors"
+	"github.com/asavie/xdp"
+	"github.com/vishvananda/netlink"
 	"log"
 	"os"
 	"os/signal"
@@ -12,32 +14,21 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/asavie/xdp"
 	"github.com/cilium/ebpf"
 	"github.com/cilium/ebpf/link"
 	flag "github.com/spf13/pflag"
-	"github.com/vishvananda/netlink"
 )
 
-//go:generate bpf2go -no-global-types -cc clang xdpfn ./xdp.c -- -D__TARGET_ARCH_x86 -I../../headers -Wall
-//go:generate bpf2go -no-global-types -cc clang xdpfnLoop ./xdp.c -- -D__TARGET_ARCH_x86 -D__USE_LOOP -I../../headers -Wall
+//go:generate bpf2go -no-global-types -cc clang xdpfn ./xdp.c -- -D__TARGET_ARCH_x86 -I../../../headers -Wall
 
 func main() {
-	var dev, cidrFile string
-	var loop bool
+	var dev string
 	flag.StringVarP(&dev, "dev", "D", "", "device to inject latency to ping")
-	flag.StringVarP(&cidrFile, "cidr", "C", "", "file containing CIDR to match")
-	flag.BoolVarP(&loop, "loop", "L", false, "binary search by loop method or unroll method")
 	flag.Parse()
 
 	ifi, err := netlink.LinkByName(dev)
 	if err != nil {
 		log.Fatalf("Failed to get device info: %v", err)
-	}
-
-	cidrs, cidrNum, err := readCidrFile(cidrFile)
-	if err != nil {
-		log.Fatalf("Failed to read CIDR file: %v", err)
 	}
 
 	xsk, err := xdp.NewSocket(ifi.Attrs().Index, 0, nil)
@@ -46,47 +37,23 @@ func main() {
 	}
 	defer xsk.Close()
 
-	var spec *ebpf.CollectionSpec
-	if loop {
-		spec, err = loadXdpfnLoop()
-	} else {
-		spec, err = loadXdpfn()
-	}
-	if err != nil {
-		log.Printf("Failed to load XDP bpf: %v", err)
-		return
-	}
-
-	err = spec.RewriteConstants(map[string]interface{}{
-		"delay_cidrs":     cidrs,
-		"delay_cidrs_len": uint32(cidrNum),
-	})
-	if err != nil {
-		log.Printf("Failed to rewrite constants: %v", err)
-		return
-	}
-
 	var obj xdpfnObjects
-	if err := spec.LoadAndAssign(&obj, &ebpf.CollectionOptions{
+	if err := loadXdpfnObjects(&obj, &ebpf.CollectionOptions{
 		Programs: ebpf.ProgramOptions{
-			// LogLevel: ebpf.LogLevelInstruction | ebpf.LogLevelBranch | ebpf.LogLevelStats,
-			LogLevel: ebpf.LogLevelBranch | ebpf.LogLevelStats,
-			LogSize:  10 * ebpf.DefaultVerifierLogSize,
+						// LogLevel: ebpf.LogLevelInstruction | ebpf.LogLevelBranch | ebpf.LogLevelStats,
+            			LogLevel: ebpf.LogLevelBranch | ebpf.LogLevelStats,
+            			LogSize:  10 * ebpf.DefaultVerifierLogSize,
 		},
 	}); err != nil {
 		var ve *ebpf.VerifierError
 		if errors.As(err, &ve) {
-			log.Printf("Verifier error: %+v", ve)
+			log.Printf("Verifier error: %-20v", ve)
 			return
 		}
 		log.Printf("Failed to load XDP bpf obj: %v", err)
 		return
 	}
 	defer obj.Close()
-
-	if len(obj.XdpFn.VerifierLog) != 0 {
-		log.Printf("Verifier log:\n%s", obj.XdpFn.VerifierLog)
-	}
 
 	if err := obj.XdpSockets.Put(uint32(0), uint32(xsk.FD())); err != nil {
 		log.Printf("Failed to update XDP socket bpf map: %v", err)
@@ -114,7 +81,7 @@ func main() {
 	for {
 		select {
 		case <-ctx.Done():
-			if nHandling <= 0 {
+			if nHandling == 0 {
 				return
 			}
 
@@ -151,7 +118,7 @@ func main() {
 func delayPackets(xsk *xdp.Socket, descs []xdp.Desc) {
 	for _, desc := range descs {
 		desc := desc
-		latency := readLatency(xsk, desc)
+		latency := readLatency(xsk, desc) // 从 metadata 里读取延时信息
 		log.Printf("Delaying packet by %s", latency)
 		delayPacket(xsk, desc, latency)
 	}
@@ -161,7 +128,7 @@ func readLatency(xsk *xdp.Socket, desc xdp.Desc) time.Duration {
 	frame := xsk.GetFrame(desc)
 
 	sh := (*reflect.SliceHeader)(unsafe.Pointer(&frame))
-	sh.Data -= 4
+	sh.Data -= 4 // 往前挪动 四 个字节
 	sh.Len += 4
 	sh.Cap += 4
 
