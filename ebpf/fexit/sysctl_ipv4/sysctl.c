@@ -60,8 +60,9 @@ static __always_inline int __fexit(void *ctx, struct ctl_table *ctl, int write, 
     net = (typeof(net))BPF_CORE_READ(ctl, extra2);
 
     event.ifindex = devinet_conf_ifindex(net, cnf);
-    event.cnf_data_ptr = ((__u64)cnf) + offsetof(struct ipv4_devconf, data);
-    event.ctl_data_ptr = (__u64)BPF_CORE_READ(ctl, data);
+    event.cnf_data_ptr = ((__u64)cnf) + offsetof(struct ipv4_devconf, data);// cnf数组的地址
+    event.ctl_data_ptr = (__u64)BPF_CORE_READ(ctl, data);// 数组内的偏移地址
+    // 数组的每一项都是 int; 两项相减/4 就是个数
     bpf_probe_read_kernel(&event.devconf_value, sizeof(event.devconf_value), BPF_CORE_READ(ctl, data));
 
     handle_event(ctx, &event);

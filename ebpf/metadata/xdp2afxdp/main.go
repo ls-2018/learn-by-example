@@ -40,9 +40,9 @@ func main() {
 	var obj xdpfnObjects
 	if err := loadXdpfnObjects(&obj, &ebpf.CollectionOptions{
 		Programs: ebpf.ProgramOptions{
-						// LogLevel: ebpf.LogLevelInstruction | ebpf.LogLevelBranch | ebpf.LogLevelStats,
-            			LogLevel: ebpf.LogLevelBranch | ebpf.LogLevelStats,
-            			LogSize:  10 * ebpf.DefaultVerifierLogSize,
+			// LogLevel: ebpf.LogLevelInstruction | ebpf.LogLevelBranch | ebpf.LogLevelStats,
+			LogLevel: ebpf.LogLevelBranch | ebpf.LogLevelStats,
+			LogSize:  10 * ebpf.DefaultVerifierLogSize,
 		},
 	}); err != nil {
 		var ve *ebpf.VerifierError

@@ -9,7 +9,7 @@
 /ebpf/fentry_fexit-tailcall/fentry_fexit-tailcall
 /ebpf/fentry_fexit-freplace/fentry_fexit-freplace
 /ebpf/fentry_fexit-tc/fentry_fexit-tc
-/ebpf/fentry_fexit-xdp/fentry_fexit-xdp
+/ebpf/xdp/fentry_fexit-xdp/fentry_fexit-xdp
 
 *_bpfe*
 

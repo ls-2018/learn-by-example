@@ -162,10 +162,10 @@ func handlePerfEvent(ctx context.Context, events *ebpf.Map) {
 
 		switch ev.Type {
 		default:
-			log.Printf("tcp connection: %s:%d -> %s:%d",				netip.AddrFrom4(ev.Saddr), ev.Sport,				netip.AddrFrom4(ev.Daddr), ev.Dport)
+			log.Printf("tcp connection: %s:%d -> %s:%d", netip.AddrFrom4(ev.Saddr), ev.Sport, netip.AddrFrom4(ev.Daddr), ev.Dport)
 
 		case 3:
-			log.Printf("tcp connection: %s:%d -> %s:%d (freplace: %d)",				netip.AddrFrom4(ev.Saddr), ev.Sport,				netip.AddrFrom4(ev.Daddr), ev.Dport,				freplaceCnt)
+			log.Printf("tcp connection: %s:%d -> %s:%d (freplace: %d)", netip.AddrFrom4(ev.Saddr), ev.Sport, netip.AddrFrom4(ev.Daddr), ev.Dport, freplaceCnt)
 			freplaceCnt++
 		}
 

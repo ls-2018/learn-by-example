@@ -58,13 +58,13 @@ func main() {
 		log.Printf("Attached kprobe(tcp_connect)")
 	}
 
-// 	if kp, err := link.Kprobe("inet_csk_complete_hashdance", obj.K_icskCompleteHashdance, nil); err != nil {
-// 		log.Printf("Failed to attach kprobe(inet_csk_complete_hashdance): %v", err)
-// 		return
-// 	} else {
-// 		defer kp.Close()
-// 		log.Printf("Attached kprobe(inet_csk_complete_hashdance)")
-// 	}
+	// 	if kp, err := link.Kprobe("inet_csk_complete_hashdance", obj.K_icskCompleteHashdance, nil); err != nil {
+	// 		log.Printf("Failed to attach kprobe(inet_csk_complete_hashdance): %v", err)
+	// 		return
+	// 	} else {
+	// 		defer kp.Close()
+	// 		log.Printf("Attached kprobe(inet_csk_complete_hashdance)")
+	// 	}
 
 	go handlePerfEvent(ctx, obj.Events)
 

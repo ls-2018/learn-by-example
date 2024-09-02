@@ -20,6 +20,9 @@ struct {
     __uint(max_entries, 1);
 } socks SEC(".maps");
 
+//cat /sys/kernel/debug/tracing/events/netlink/netlink_extack/format
+
+
 SEC("fentry/freplace_handler")
 int BPF_PROG(fentry_freplace_handler, struct pt_regs *regs) {
     bpf_printk("fentry, freplace handler, regs:%p\n", regs);
